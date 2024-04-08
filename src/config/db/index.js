@@ -1,8 +1,8 @@
 const mysql = require("mysql2/promise");
 
 async function establishConnection() {
-  // Creating a connection to the MySQL database
-  const connection = await mysql.createConnection({
+  // Creating a connection pool to the MySQL database
+  const connection = await mysql.createPool({
     host: "localhost",
     port: "3306",
     user: "root",
