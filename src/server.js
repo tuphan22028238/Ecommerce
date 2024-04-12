@@ -1,6 +1,7 @@
 const express = require('express')
 const route = require('./routes')
 const db = require('./config/db')
+const cookies = require('cookie-parser')
 
 const app = express()
 const server = require('http').createServer(app)
@@ -10,6 +11,8 @@ app.use(
         extended: true,
     }),
 )
+
+app.use(cookies())
 
 app.get('/db', (req, res) => {
     let sql = `SELECT * FROM wordtest`

@@ -5,7 +5,7 @@ const db = mysql.createConnection({
     port: '3307',
     user: 'root',
     password: '123456',
-    database: 'dicdb'
+    database: 'eshop'
 })
 
 db.connect()
