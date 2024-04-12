@@ -43,6 +43,7 @@ Product.init(
     listColor: {
       type: DataTypes.STRING(100),
       allowNull: true,
+      defaultValue: "red",
       field: "list_color",
     },
     status: {
@@ -80,21 +81,4 @@ async function insertProduct(productData) {
   }
 }
 
-insertProduct({
-  name: "Áo thun nam",
-  price: 100000,
-  description: "Áo thun nam hàng hiệu",
-  quantityPerUnit: 1,
-  unitInStock: 10,
-  unitInOrders: 0,
-  reOrderLevel: 5,
-  listColor: "Đỏ, Xanh, Vàng",
-  status: 1,
-  createdDate: new Date(),
-  typeId: 1,
-});
-
-module.exports = {
-  Product,
-  insertProduct,
-};
+module.exports = Product;
