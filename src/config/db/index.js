@@ -1,29 +1,8 @@
 const Sequelize = require("sequelize");
-require("dotenv").config();
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    dialect: "mysql",
-    logging: false,
-  }
-);
-
-const connectDB = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log(`MySQL Connected: ${process.env.DB_HOST}`.cyan.underline);
-    return sequelize;
-  } catch (error) {
-    console.error(`Error: ${error.message}`.red.underline.bold);
-    process.exit(1);
-  }
-};
-
-module.exports = {
-  connectDB,
-};
+const sequelize = new Sequelize("e_shop", "root", "123456", {
+  host: "localhost",
+  dialect: "mysql",
+  logging: false,
+});
+module.exports = sequelize;

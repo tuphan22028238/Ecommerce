@@ -1,74 +1,100 @@
-const Sequelize = require("sequelize");
-const db = require("../config/database");
+const { Sequelize, Model, DataTypes } = require("sequelize");
+const sequelize = require("../../config/db/index");
 
-const Product = db.define(
-  "product",
+class Product extends Model {}
+
+Product.init(
   {
     id: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
     name: {
-      type: Sequelize.STRING(100),
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
     price: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     description: {
-      type: Sequelize.STRING(4000),
+      type: DataTypes.STRING(4000),
       allowNull: true,
     },
     quantityPerUnit: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: true,
-      field: "quantity_per_unit",
-      comment: "số lượng",
+      comment: "Số lượng",
     },
     unitInStock: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
-      field: "unit_in_stock",
     },
     unitInOrders: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: true,
-      field: "unit_in_orders",
     },
     reOrderLevel: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: true,
-      field: "re_order_level",
       comment: "Mức tối thiểu của mặt hàng",
     },
     listColor: {
-      type: Sequelize.STRING(100),
-      allowNull: false,
+      type: DataTypes.STRING(100),
+      allowNull: true,
       field: "list_color",
     },
     status: {
-      type: Sequelize.TINYINT,
+      type: DataTypes.TINYINT,
       allowNull: false,
       defaultValue: 1,
       comment: "0: Không bán - 1: mới - 2 : bình thường",
     },
     createdDate: {
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+      type: DataTypes.DATE,
+      defaultValue: Sequelize.NOW,
       field: "created_date",
     },
     typeId: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
+      type: DataTypes.INTEGER,
+      allowNull: true,
       field: "id_type",
     },
   },
   {
-    tableName: "product",
+    sequelize,
+    modelName: "product",
     timestamps: false,
+    freezeTableName: true,
   }
 );
 
-module.exports = Product;
+// Inserting a new product
+async function insertProduct(productData) {
+  try {
+    const product = await Product.create(productData);
+    console.log("Product was created:", product);
+  } catch (error) {
+    console.error("Error inserting product:", error);
+  }
+}
+
+insertProduct({
+  name: "Áo thun nam",
+  price: 100000,
+  description: "Áo thun nam hàng hiệu",
+  quantityPerUnit: 1,
+  unitInStock: 10,
+  unitInOrders: 0,
+  reOrderLevel: 5,
+  listColor: "Đỏ, Xanh, Vàng",
+  status: 1,
+  createdDate: new Date(),
+  typeId: 1,
+});
+
+module.exports = {
+  Product,
+  insertProduct,
+};

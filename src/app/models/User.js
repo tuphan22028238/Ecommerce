@@ -1,14 +1,7 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
-require("dotenv").config();
-
+const sequelize = require("../../config/db/index");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-
-const sequelize = new Sequelize("e_shop", "root", "123456", {
-  host: "localhost",
-  dialect: "mysql",
-  logging: false,
-});
 
 class User extends Model {}
 
@@ -65,7 +58,7 @@ User.init(
     },
   },
   {
-    sequelize,
+    sequelize, // We need to pass the connection instance
     modelName: "user",
     timestamps: false, // Disable timestamps
     freezeTableName: true, // Model tableName will be the same as the model name
