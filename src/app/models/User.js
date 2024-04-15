@@ -181,24 +181,4 @@ async function getUser(username) {
   }
 }
 
-// insertUser({
-//   username: "admin",
-//   password: "admin",
-//   name: "admin",
-//   dob: "1999-01-01",
-//   phone: "0123456789",
-//   role: 2,
-//   address: "Hanoi",
-//   email: "a@mail.com",
-// });
-
-// updateUser("admin", { name: "Admin" });
-// setRoleUser("admin", 2);
-updateUser("admin", { password: "newPassword", email: "newEmail@example.com" });
-module.exports = {
-  insertUser,
-  deleteUser,
-  updateUser,
-  setRoleUser,
-  getUser,
-};
+module.exports = User;

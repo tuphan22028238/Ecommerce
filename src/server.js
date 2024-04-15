@@ -1,5 +1,6 @@
 const express = require("express");
 const route = require("./routes");
+const cookie = require("cookie-parser");
 const db = require("./config/db");
 
 const app = express();
@@ -11,17 +12,8 @@ app.use(
   })
 );
 
-app.get("/db", (req, res) => {
-  let sql = `SELECT * FROM e_shop.users`;
-  db.query(sql, (err, data) => {
-    if (err) {
-      console.log("Co loi");
-      console.log(err);
-    } else {
-      res.send(typeof data);
-    }
-  });
-});
+app.use(cookie());
+app.use(express.json());
 
 route(app);
 

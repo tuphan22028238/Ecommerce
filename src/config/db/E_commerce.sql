@@ -21,7 +21,7 @@ CREATE TABLE `user` (
     `phone` CHAR(12) DEFAULT NULL,
     `role` TINYINT(4) NOT NULL DEFAULT '1' COMMENT '1 : Customer- 2 : Seller',
     `address` VARCHAR(100) DEFAULT NULL,
-    `email` VARCHAR(100) NOT NULL,
+    `email` VARCHAR(100) DEFAULT NULL,
     `status` TINYINT(4) NOT NULL DEFAULT '1' COMMENT '1: Active- 0 : Inactive',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8;
