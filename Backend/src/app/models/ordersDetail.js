@@ -41,7 +41,7 @@ OrderDetail.init(
   },
   {
     sequelize,
-    modelName: "orderDetail",
+    modelName: "orders_detail",
     timestamps: false,
     freezeTableName: true,
   }

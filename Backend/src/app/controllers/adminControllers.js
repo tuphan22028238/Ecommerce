@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../models/user");
 
 class adminController {
   verifyAdmin(req, res, next) {
@@ -6,4 +6,4 @@ class adminController {
   }
 }
 
-module.exports = new adminController;
+module.exports = new adminController();

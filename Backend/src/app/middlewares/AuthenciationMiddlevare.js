@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const User = require("../models/user");
 
 function protect(req, res, next) {
   const token = req.cookies.jwt;
@@ -11,7 +11,8 @@ function protect(req, res, next) {
         const user = await User.findOne({ where: { id: decoded.id } });
         res.locals.user = user;
         next();
-      }})
+      }
+    });
   } else {
     res.send("Please login");
   }
@@ -22,11 +23,11 @@ function checkRole(req, res, next) {
   if (role == 2) {
     next();
   } else {
-    res.send("You are not admin"); 
+    res.send("You are not admin");
   }
 }
 
 module.exports = {
   protect,
-  checkRole
-}
+  checkRole,
+};

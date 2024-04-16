@@ -66,7 +66,7 @@ Order.init(
   },
   {
     sequelize,
-    modelName: "order",
+    modelName: "orders",
     timestamps: false,
     freezeTableName: true,
   }

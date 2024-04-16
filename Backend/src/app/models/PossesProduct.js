@@ -1,7 +1,7 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../../config/db/index");
-const User = require("..models/user");
-const Product = require("..models/product");
+const User = require("./user");
+const Product = require("./product");
 
 class PossesProduct extends Model {}
 
@@ -20,7 +20,7 @@ PossesProduct.init(
   },
   {
     sequelize,
-    modelName: "possesProduct",
+    modelName: "posses_product",
     timestamps: false,
     freezeTableName: true,
   }
