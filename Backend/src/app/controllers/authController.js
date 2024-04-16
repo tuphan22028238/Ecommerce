@@ -1,16 +1,16 @@
-const User = require("../models/User");
+const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id) => {
-  return jwt.sign({id}, "MarketSwift", {
-    expiresIn: maxAge
+  return jwt.sign({ id }, "MarketSwift", {
+    expiresIn: maxAge,
   });
-}
+};
 
 const handleErrors = (errors) => {
-  let Errors = {username: "", email: ""};
+  let Errors = { username: "", email: "" };
   mainError = errors.errors[0].message;
   if (mainError.includes("username")) {
     Errors.username = "Username is already taken";
@@ -19,15 +19,17 @@ const handleErrors = (errors) => {
     Errors.email = "Email is already taken";
   }
   return Errors;
-}
+};
 
 class authController {
   async login(req, res, next) {
-    const infor = await User.findOne({ where: { username: req.body.username } });
+    const infor = await User.findOne({
+      where: { username: req.body.username },
+    });
     if (infor !== null) {
       const token = createToken(infor.id);
-      res.cookie("jwt", token, { httpOnly: true});
-      res.cookie("role", infor.role, { httpOnly: true});
+      res.cookie("jwt", token, { httpOnly: true });
+      res.cookie("role", infor.role, { httpOnly: true });
       res.send(infor);
     } else {
       res.send("Login failed");
@@ -43,16 +45,17 @@ class authController {
       });
       if (newUser) {
         const token = createToken(newUser.id);
-        res.cookie("jwt", token, { httpOnly: true});
-        res.cookie("role", newUser.role, { httpOnly: true});
+        res.cookie("jwt", token, { httpOnly: true });
+        res.cookie("role", newUser.role, { httpOnly: true });
         res.send("Register success" + newUser.id);
       } else {
         res.send("Register failed");
       }
-    } 
-    catch (errors) {
+    } catch (errors) {
       const Errors = handleErrors(errors);
-      res.status(400).send("Error adding new user: " + Errors.username + Errors.email);
+      res
+        .status(400)
+        .send("Error adding new user: " + Errors.username + Errors.email);
     }
   }
 
@@ -63,4 +66,4 @@ class authController {
   }
 }
 
-module.exports = new authController;
+module.exports = new authController();

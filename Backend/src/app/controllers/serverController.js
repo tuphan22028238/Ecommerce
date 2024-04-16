@@ -1,4 +1,4 @@
-const Product = require("../models/Product");
+const Product = require("../models/product");
 
 class ServerController {
   //Some functions below are for testing
@@ -9,7 +9,7 @@ class ServerController {
     } catch (errors) {
       console.error("Error viewing all product:", errors.message);
       res.status(400).send("Error viewing all product");
-    } 
+    }
   }
 
   // Request imporved
@@ -28,8 +28,7 @@ class ServerController {
       } else {
         res.send("Add new product failed");
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.error("Error adding new product:", error.message);
       res.status(400).send("Error adding new product");
     }
@@ -50,4 +49,4 @@ class ServerController {
   }
 }
 
-module.exports = new ServerController;
+module.exports = new ServerController();
