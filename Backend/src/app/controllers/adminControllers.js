@@ -6,4 +6,4 @@ class adminController {
   }
 }
 
-module.exports = new adminController();
+module.exports = new adminController;

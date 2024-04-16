@@ -49,4 +49,4 @@ class ServerController {
   }
 }
 
-module.exports = new ServerController();
+module.exports = new ServerController;
