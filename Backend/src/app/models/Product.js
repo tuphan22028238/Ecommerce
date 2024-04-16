@@ -71,14 +71,4 @@ Product.init(
   }
 );
 
-// Inserting a new product
-async function insertProduct(productData) {
-  try {
-    const product = await Product.create(productData);
-    console.log("Product was created:", product);
-  } catch (error) {
-    console.error("Error inserting product:", error);
-  }
-}
-
 module.exports = Product;
