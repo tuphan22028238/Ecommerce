@@ -5,7 +5,7 @@ class ServerController {
   async viewAllProduct(req, res, next) {
     try {
       const data = await Product.findAll();
-      res.send(data);
+      res.status(200).json(data);
     } catch (errors) {
       console.error("Error viewing all product:", errors.message);
       res.status(400).send("Error viewing all product");

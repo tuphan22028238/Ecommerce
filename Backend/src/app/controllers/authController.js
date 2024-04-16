@@ -42,6 +42,9 @@ class authController {
         role: req.body.role,
       });
       if (newUser) {
+        const token = createToken(newUser.id);
+        res.cookie("jwt", token, { httpOnly: true});
+        res.cookie("role", newUser.role, { httpOnly: true});
         res.send("Register success" + newUser.id);
       } else {
         res.send("Register failed");
@@ -51,6 +54,12 @@ class authController {
       const Errors = handleErrors(errors);
       res.status(400).send("Error adding new user: " + Errors.username + Errors.email);
     }
+  }
+
+  logout(req, res, next) {
+    res.cookie("jwt", "", { maxAge: 1 });
+    res.cookie("role", "", { maxAge: 1 });
+    res.send("Logout success");
   }
 }
 
