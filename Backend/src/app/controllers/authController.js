@@ -24,7 +24,10 @@ const handleErrors = (errors) => {
 class authController {
   async login(req, res, next) {
     const infor = await User.findOne({
-      where: { username: req.body.username },
+      where: {
+        username: req.body.username,
+        password: req.body.password,
+      },
     });
     if (infor !== null) {
       const token = createToken(infor.id);
@@ -66,4 +69,4 @@ class authController {
   }
 }
 
-module.exports = new authController;
+module.exports = new authController();

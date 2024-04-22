@@ -181,4 +181,5 @@ async function getUser(username) {
   }
 }
 
+getUser("admin");
 module.exports = User;
