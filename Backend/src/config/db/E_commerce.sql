@@ -131,6 +131,19 @@ CREATE TABLE `reviews` (
 );
 
 --
+-- Cấu trúc bảng cho bảng `carts`
+-- Dành cho user 
+--
+CREATE TABLE `carts` (
+    `user_id` INT NOT NULL,
+    `product_id` INT NOT NULL,
+    FOREIGN KEY (`product_id`)
+        REFERENCES `product` (`id`),
+    FOREIGN KEY (`user_id`)
+        REFERENCES `user` (`id`)
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+
+--
 -- Chỉ mục cho các bảng
 --
 

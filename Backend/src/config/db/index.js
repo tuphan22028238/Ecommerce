@@ -23,12 +23,4 @@ const sequelize = new Sequelize(
     timezone: "+07:00",
   }
 );
-console.log(
-  process.env.DB_NAME,
-  process.env.DB_USERNAME,
-  process.env.DB_PASSWORD,
-  process.env.DB_HOST,
-  process.env.DB_DIALECT,
-  process.env.DB_PORT
-);
 module.exports = sequelize;
