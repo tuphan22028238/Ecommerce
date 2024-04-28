@@ -1,27 +1,30 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
 const sequelize = require("../../config/db/index");
 
-class Orders extends Model {}
+class ImageProduct extends Model {}
 
-Orders.init(
+ImageProduct.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
     },
-    userId: {
+    link: {
+      type: DataTypes.STRING(300),
+      allowNull: false,
+    },
+    productId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: "id_user",
+      field: "id_product",
     },
   },
   {
     sequelize,
-    modelName: "orders",
+    modelName: "image_product",
     timestamps: false,
     freezeTableName: true,
   }
 );
 
-module.exports = Orders;
+module.exports = ImageProduct;
