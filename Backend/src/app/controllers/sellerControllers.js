@@ -1,0 +1,120 @@
+const User = require("../models/user");
+const PossesProduct = require("../models/possesProduct");
+const Product = require("../models/product");
+const Order = require("../models/orders");
+const OrderDetail = require("../models/ordersDetail");
+const ImageProduct = require("../models/ImageProduct");
+
+
+class SellerController {
+    async viewListProduct(req, res, next) {
+        try {
+            let listProduct = []
+            const myProduct = await PossesProduct.findAll({ where: { userId: req.params.id } });
+            for (let i = 0; i < myProduct.length; i++) {
+                const product = await Product.findOne({ where: { id: myProduct[i].dataValues.productId } });
+                listProduct.push(product);
+            }
+            res.send(listProduct);
+        }
+        catch (errors) {
+            console.error("Error viewing product:", errors.message);
+            res.status(400).send("Error viewing product");
+        }
+    }
+
+    async addProduct(req, res, next) {
+        try {
+            const product = await Product.create({
+                name: req.body.name,
+                price: req.body.price,
+                unitInStock: req.body.stock,
+                id_type: req.body.type,
+            });
+            const possesProduct = await PossesProduct.create({
+                userId: req.body.userId,
+                productId: product.id
+            });
+
+            res.send(product);
+        }
+        catch (errors) {
+            console.error("Error adding product:", errors.message);
+            res.status(400).send("Error adding product");
+        }
+    }
+
+    async deleteProduct(req, res, next) {
+        try {
+            const product = await Product.findOne({ where: { id: req.params.id } });
+
+            await ImageProduct.findAll({ where: { productId: product.id } }).then(images => {
+                images.forEach(image => {
+                    image.destroy();
+                });
+            });
+
+            await PossesProduct.findAll({ where: { productId: product.id } }).then(possesProducts => {
+                possesProducts.forEach(possesProduct => {
+                    possesProduct.destroy();
+                });
+            });
+
+            // await Order.findAll({ where: { productId: product.id } }).then(carts => {
+            //     carts.forEach(cart => {
+            //         cart.destroy();
+            //     });
+            // });
+
+            await OrderDetail.findAll({ where: { productId: product.id } }).then(orderDetails => {
+                orderDetails.forEach(async orderDetail => {
+                    orderDetail.destroy()
+                });
+            });
+
+            product.destroy();
+
+            res.send(product);
+        }
+        catch (errors) {
+            console.error("Error deleting product:", errors.message);
+            res.status(400).send("Error deleting product");
+        }
+    }
+
+    async requestEditProduct(req, res, next) {
+        try {
+            const product = await Product.findOne({ where: { id: req.params.id } });
+            res.send(product);
+        }
+        catch (errors) {
+            console.error("Error requesting edit product:", errors.message);
+            res.status(400).send("Error requesting edit product");
+        }
+    }
+
+    async editProduct(req, res, next) {
+        try {
+            const product = await Product.findOne({ where: { id: req.params.id } });
+            await product.update(req.body);
+
+            res.send(product);
+        }
+        catch (errors) {
+            console.error("Error edit product:", errors.message);
+            res.status(400).send("Error edit product");
+        }
+    }
+    async getQuantity(req, res, next) {
+        try {
+            const product = await Product.findOne({ where: { id: req.params.id } });
+            res.send(product.getDataValue('unitInStock'));
+        }
+        catch (errors) {
+            console.error("Error get quantity:", errors.message);
+            res.status(400).send("Error get quantity");
+        }
+    }
+}
+
+module.exports = new SellerController;
