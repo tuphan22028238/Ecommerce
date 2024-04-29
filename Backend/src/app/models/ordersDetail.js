@@ -1,7 +1,6 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../../config/db/index");
-
-class OrderDetail extends Model {}
+class OrderDetail extends Model { }
 
 OrderDetail.init(
   {
@@ -46,9 +45,5 @@ OrderDetail.init(
     freezeTableName: true,
   }
 );
-
-// Định nghĩa các ràng buộc ngoại khoá
-OrderDetail.belongsTo(Product, { foreignKey: "productId" });
-OrderDetail.belongsTo(Order, { foreignKey: "orderId" });
 
 module.exports = OrderDetail;

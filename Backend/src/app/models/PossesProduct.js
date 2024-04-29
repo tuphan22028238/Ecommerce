@@ -3,10 +3,15 @@ const sequelize = require("../../config/db/index");
 const User = require("./user");
 const Product = require("./product");
 
-class PossesProduct extends Model {}
+class PossesProduct extends Model { }
 
 PossesProduct.init(
   {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
