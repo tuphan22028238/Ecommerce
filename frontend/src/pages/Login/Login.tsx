@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Form, Link } from "react-router-dom";
+import { Form, Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {Schema,loginSchema} from "../../ultis/Rule"
 import { useMutation } from "@tanstack/react-query";
@@ -7,12 +7,17 @@ import { omit } from "lodash";
 import Input from "../../components/Input";
 import { login } from "../../apis/auth.api";
 import { isAxiosUnprocessableEntity } from "../../ultis/utils";
-import { ResponseApi } from "types/utils.type";
+import { ErrorResponse } from "types/utils.type";
+import { useContext } from "react";
+import { AppContext } from "../../context/app.context";
 type FormData = Omit<Schema,'confirm_password'>
 
 
 
 export default function Login() {
+
+  const {setIsAuthenticated} = useContext(AppContext)
+  const navigate = useNavigate()
   const {register,
         setError, 
          handleSubmit,
@@ -32,10 +37,13 @@ export default function Login() {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
         console.log(data)
+        setIsAuthenticated(true)
+        navigate('/')
+
       
       },
       onError: (error) => {
-        if (isAxiosUnprocessableEntity<ResponseApi<FormData>>(error)) {
+        if (isAxiosUnprocessableEntity<ErrorResponse<FormData>>(error)) {
             const formError = error.response?.data.data
 
             if(formError) {
