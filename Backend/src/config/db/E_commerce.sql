@@ -33,7 +33,7 @@ CREATE TABLE `user` (
 CREATE TABLE `orders` (
     `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
     `total_price` INT(11) NOT NULL,
-    `status` TINYINT(4) NOT NULL DEFAULT '1' COMMENT '0 : Hết hàng - 1 : báo giá - 2 : hủy - 3: đã bán',
+    `status` TINYINT(4) NOT NULL DEFAULT '1' COMMENT '0 : Done - 1 : Processing - 2 : Cancelled - 3 : Shipping - 4 : Shipped - 5 : Refunded - 6 : Returned',
     payment_mode TINYINT(4) NOT NULL COMMENT '0: Tiền mặt - 1: Chuyển khoản',
     payment_date DATETIME,
     shipment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -95,7 +95,7 @@ CREATE TABLE `type` (
     `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
     `name` VARCHAR(100) NOT NULL,
 	`gender` TINYINT(4) NOT NULL COMMENT '0: nữ - 1: nam',
-    `size_form` INT(11) DEFAULT NULL,
+    `size_from` INT(11) DEFAULT NULL,
     `size_to` INT(11) DEFAULT NULL
 )  ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
@@ -104,6 +104,7 @@ CREATE TABLE `type` (
 --
 
 CREATE TABLE `posses_product` (
+    `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
     `user_id` INT NOT NULL,
     `product_id` INT NOT NULL,
     FOREIGN KEY (user_id)
@@ -129,6 +130,19 @@ CREATE TABLE `reviews` (
     FOREIGN KEY (product_id)
         REFERENCES `product` (id)
 );
+
+--
+-- Cấu trúc bảng cho bảng `carts`
+-- Dành cho user 
+--
+CREATE TABLE `carts` (
+    `user_id` INT NOT NULL,
+    `product_id` INT NOT NULL,
+    FOREIGN KEY (`product_id`)
+        REFERENCES `product` (`id`),
+    FOREIGN KEY (`user_id`)
+        REFERENCES `user` (`id`)
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 --
 -- Chỉ mục cho các bảng

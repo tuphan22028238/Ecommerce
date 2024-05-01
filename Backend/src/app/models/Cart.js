@@ -1,27 +1,32 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
 const sequelize = require("../../config/db/index");
 
-class Orders extends Model {}
+class Cart extends Model {}
 
-Orders.init(
+Cart.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
     },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: "id_user",
+      field: "user_id",
     },
+    productId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: "product_id",
+    },
+    
   },
   {
     sequelize,
-    modelName: "orders",
+    modelName: "carts",
     timestamps: false,
     freezeTableName: true,
   }
 );
 
-module.exports = Orders;
+module.exports = Cart;
