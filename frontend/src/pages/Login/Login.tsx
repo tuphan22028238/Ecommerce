@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Form, Link } from "react-router-dom";
+import { Form, Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {Schema,loginSchema} from "../../ultis/Rule"
 import { useMutation } from "@tanstack/react-query";
@@ -7,12 +7,18 @@ import { omit } from "lodash";
 import Input from "../../components/Input";
 import { login } from "../../apis/auth.api";
 import { isAxiosUnprocessableEntity } from "../../ultis/utils";
-import { ResponseApi } from "types/utils.type";
+import { ErrorResponse } from "types/utils.type";
+import { useContext } from "react";
+import { AppContext } from "../../context/app.context";
+import Button from "../../components/Button";
 type FormData = Omit<Schema,'confirm_password'>
 
 
 
 export default function Login() {
+
+  const {setIsAuthenticated, setProfile} = useContext(AppContext)
+  const navigate = useNavigate()
   const {register,
         setError, 
          handleSubmit,
@@ -32,10 +38,14 @@ export default function Login() {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
         console.log(data)
+        setIsAuthenticated(true)
+        setProfile(data.data.data.user)
+        navigate('/')
+
       
       },
       onError: (error) => {
-        if (isAxiosUnprocessableEntity<ResponseApi<FormData>>(error)) {
+        if (isAxiosUnprocessableEntity<ErrorResponse<FormData>>(error)) {
             const formError = error.response?.data.data
 
             if(formError) {
@@ -81,9 +91,12 @@ export default function Login() {
               
             />
               <div className="mt-3">
-                <button type="submit" className="w-full text-center py-4 px-2 uppercase bg-red-500 text-white text-sm hover:bg-red-600">
+                <Button type="submit"  className={`w-full text-center py-4 px-2 uppercase text-white text-sm ${loginMutation.isPending ? 'bg-red-500 hover:bg-red-600 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600'}`}
+                isLoading={loginMutation.isPending}
+                disabled = {loginMutation.isPending}
+                >
                   Đăng nhập
-                </button>
+                </Button>
               </div>
               <div className="mt-8 text-center">
               <div className="flex justify-center items-center">
