@@ -10,13 +10,14 @@ import { isAxiosUnprocessableEntity } from "../../ultis/utils";
 import { ErrorResponse } from "types/utils.type";
 import { useContext } from "react";
 import { AppContext } from "../../context/app.context";
+import Button from "../../components/Button";
 type FormData = Omit<Schema,'confirm_password'>
 
 
 
 export default function Login() {
 
-  const {setIsAuthenticated} = useContext(AppContext)
+  const {setIsAuthenticated, setProfile} = useContext(AppContext)
   const navigate = useNavigate()
   const {register,
         setError, 
@@ -38,6 +39,7 @@ export default function Login() {
       onSuccess: (data) => {
         console.log(data)
         setIsAuthenticated(true)
+        setProfile(data.data.data.user)
         navigate('/')
 
       
@@ -89,9 +91,12 @@ export default function Login() {
               
             />
               <div className="mt-3">
-                <button type="submit" className="w-full text-center py-4 px-2 uppercase bg-red-500 text-white text-sm hover:bg-red-600">
+                <Button type="submit"  className={`w-full text-center py-4 px-2 uppercase text-white text-sm ${loginMutation.isPending ? 'bg-red-500 hover:bg-red-600 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600'}`}
+                isLoading={loginMutation.isPending}
+                disabled = {loginMutation.isPending}
+                >
                   Đăng nhập
-                </button>
+                </Button>
               </div>
               <div className="mt-8 text-center">
               <div className="flex justify-center items-center">

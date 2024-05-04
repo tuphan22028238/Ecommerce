@@ -7,7 +7,7 @@ import Register from "./pages/Register"
 import { Navigate, Outlet, useRoutes } from "react-router-dom"
 import { useContext } from "react"
 import { AppContext } from "./context/app.context"
-// const isAuthenticated = false
+import path from "./ultis/path"
 function ProtectedRoute() {
   const {isAuthenticated} = useContext(AppContext)
   return isAuthenticated ? <Outlet/> : <Navigate to='/login' />
@@ -27,7 +27,7 @@ export default function useRouteElements() {
       element: <ProtectedRoute />,
       children: [
         {
-          path: '/profile',
+          path: path.profile,
           element: (
             <MainLayout>
             <Profile></Profile>
@@ -42,18 +42,18 @@ export default function useRouteElements() {
       element: <RejectedRoute />,
       children: [
         {
-          path: "/login",
+          path: path.login,
           element: <Registerlayout><Login /></Registerlayout>
         },
         
         {
-          path: "/register",
+          path: path.register,
           element: <Registerlayout><Register /></Registerlayout>
         }
       ]
     },
     {
-      path: "/",
+      path: path.home,
       index : true,
       element: (
         <MainLayout>
