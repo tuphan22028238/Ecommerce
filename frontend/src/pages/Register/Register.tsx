@@ -10,14 +10,15 @@ import { omit } from "lodash";
 import { isAxiosError } from "axios";
 import { isAxiosUnprocessableEntity } from "../../ultis/utils";
 import { ErrorResponse } from "types/utils.type";
-// import { useContext } from "react";
-// import { AppContext } from "../../context/app.context";
+import Button from "../../components/Button";
+import { useContext } from "react";
+import { AppContext } from "../../context/app.context";
 
 type FormData = Schema
 export default function Register() {
 
-  // const {setIsAuthenticated} = useContext(AppContext)
-  // const navigate = useNavigate()
+  const {setIsAuthenticated , setProfile} = useContext(AppContext)
+  const navigate = useNavigate()
   const {register, handleSubmit,formState: {errors},setError} = useForm<FormData>({
     resolver: yupResolver(schema)
   })
@@ -31,8 +32,9 @@ export default function Register() {
     registerAccountMutation.mutate(body, {
       onSuccess: (data) => {
         console.log(data)
-        // setIsAuthenticated(true)
-        // navigate('/')
+        setIsAuthenticated(true)
+        setProfile(data.data.data.user)
+        navigate('/')
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntity<ErrorResponse<Omit<Schema,'confirm_password'>>>(error)) {
@@ -106,9 +108,12 @@ export default function Register() {
               rules={rules.confirm_password}
             />
             <div className="mt-3">
-              <button className="w-full text-center py-4 px-2 uppercase bg-red-500 text-white text-sm hover:bg-red-600">
+              <Button 
+              type="submit"  className={`w-full text-center py-4 px-2 uppercase text-white text-sm ${registerAccountMutation.isPending ? 'bg-red-500 hover:bg-red-600 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600'}`}
+              isLoading={registerAccountMutation.isPending}
+              disabled = {registerAccountMutation.isPending}>
                 Đăng ký
-              </button>
+              </Button>
             </div>
             <div className="mt-8 text-center">
               <div className="flex justify-center items-center">

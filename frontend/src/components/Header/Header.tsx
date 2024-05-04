@@ -7,15 +7,17 @@ import Popover from "../../components/Popover";
 import { useMutation } from "@tanstack/react-query";
 import { logout } from "../../apis/auth.api";
 import { AppContext } from "../../context/app.context";
+import Profile from "pages/Profile";
 
 function Header() {
-  const {isAuthenticated,setIsAuthenticated} = useContext(AppContext)
+  const {isAuthenticated,setIsAuthenticated,setProfile,profile} = useContext(AppContext)
   const navigate = useNavigate()
    const logoutMutation = useMutation({
     mutationFn: logout,
     onSuccess: () => {
       setIsAuthenticated(false)
       navigate('/login')
+      setProfile(null)
 
     }
    })
@@ -69,7 +71,7 @@ function Header() {
                 className="w-full h-full rounded-full object-cover "/>
                
               </div>
-              <div className="">Nguyen Phat</div>
+              <div className="">{profile?.email}</div>
             </Popover>}
             
             {!isAuthenticated && (
