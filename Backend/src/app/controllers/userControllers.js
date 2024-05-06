@@ -1,8 +1,11 @@
+const User = require("../models/user");
 const Product = require("../models/product");
 const PossesProduct = require("../models/possesProduct");
 const Order = require("../models/orders");
 const OrderDetail = require("../models/ordersDetail");
 const Cart = require("../models/cart");
+const Type = require("../models/type");
+const ImageProduct = require("../models/imageProduct");
 
 class UserController {
   // View cart
@@ -18,8 +21,19 @@ class UserController {
       // Retrieve product details for each cart item
       for (let i = 0; i < cartItems.length; i++) {
         const product = await Product.findOne({
-          where: { id: cartItems[i].productId },
+          where: { id: cartItems.productId },
+          include: [
+            {
+              model: Type,
+              attributes: ['gender']
+            },
+            {
+              model: ImageProduct,
+              attributes: ['link']
+            }
+          ],
         });
+
         myCart.push(product);
       }
 
@@ -34,23 +48,34 @@ class UserController {
   // Add product to cart
   async addToCart(req, res, next) {
     try {
-      const productId = req.body;
+      const { productId, quantity, color, discount, size } = req.body;
       const userId = req.params.id;
 
-      // Create a new entry in the cart
-      const cart = await Cart.create({
-        userId,
-        productId,
+      // Find the product in the cart
+      const product = await Cart.findOne({
+        where: {
+          userId,
+          productId,
+        },
       });
 
-      // Send success response
-      res.status(200).send("Product added to cart successfully");
+      // Add the product to the cart
+      if (!product) {
+        await Cart.create({
+          userId,
+          productId,
+          quantity,
+          color,
+          discount,
+          size,
+        });
+        res.send("Product added to cart");
+      }
     } catch (error) {
       console.error("Error adding product to cart:", error.message);
-      res.status(500).send("Error adding product to cart");
+      res.status(400).send("Error adding product to cart");
     }
   }
-
   // Delete product from cart
   async deleteFromCart(req, res, next) {
     try {

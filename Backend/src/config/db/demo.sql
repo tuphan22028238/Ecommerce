@@ -33,5 +33,8 @@ INSERT INTO `posses_product` (`user_id`, `product_id`) VALUES
 (1, 2),
 (2, 1),
 (3, 2);
-
+INSERT INTO `cart` (`quantity`, `color`, `discount`, `size`, `id_user`, `id_product`) VALUES
+(2, 1, 0, 1, 1, 1),
+(3, 2, 0.1, 1, 1, 2),
+(1, 1, 0, 1, 1, 2);
 

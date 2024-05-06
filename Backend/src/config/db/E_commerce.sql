@@ -71,6 +71,7 @@ CREATE TABLE `orders_detail` (
     `discount` DECIMAL(10 , 2 ),
     `id_product` INT(11) NOT NULL,
     `id_orders` INT(11) NOT NULL,
+    `size` INT(11),
     INDEX `id_product` (`id_product`),
     INDEX `id_orders` (`id_orders`),
     FOREIGN KEY (`id_product`)
@@ -117,6 +118,10 @@ CREATE TABLE `cart` (
     `cart_id` INT PRIMARY KEY AUTO_INCREMENT,
     `user_id` INT NOT NULL,
     `product_id` INT NOT NULL,
+    `quantity` INT,
+    `color` INT,
+    `discount` DECIMAL(10 , 2 ),
+    `size` INT,
     FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=UTF8;

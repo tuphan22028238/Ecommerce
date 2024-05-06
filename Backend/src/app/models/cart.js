@@ -20,6 +20,22 @@ Carts.init(
             allowNull: false,
             field: "product_id",
         },
+        quantity: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        color: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        discount: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        size: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     },
     {
         sequelize,
