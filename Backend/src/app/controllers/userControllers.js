@@ -10,20 +10,15 @@ class UserController {
     try {
       let myCart = [];
 
-      // Find seller's products in possession
-      const seller = await PossesProduct.findAll({
+      // Find user's cart items
+      const cartItems = await Cart.findAll({
         where: { userId: req.params.id },
       });
 
-      // Find products in user's cart
-      const cart = await Cart.findAll({
-        where: { userId: seller[0].dataValues.userId },
-      });
-
-      // Retrieve product details from the cart
-      for (let i = 0; i < cart.length; i++) {
+      // Retrieve product details for each cart item
+      for (let i = 0; i < cartItems.length; i++) {
         const product = await Product.findOne({
-          where: { id: cart[i].dataValues.productId },
+          where: { id: cartItems[i].productId },
         });
         myCart.push(product);
       }
