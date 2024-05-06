@@ -11,6 +11,7 @@ Order.init(
       primaryKey: true,
       autoIncrement: true,
     },
+<<<<<<< HEAD
     totalPrice: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -63,6 +64,11 @@ Order.init(
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+=======
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+>>>>>>> 5b17914f8fa6afac0e8b170a339486f9afe20566
       field: "id_user",
     },
   },
