@@ -1,11 +1,11 @@
-const User = require("../models/user");
-const Product = require("../models/product");
-const PossesProduct = require("../models/possesProduct");
-const Order = require("../models/orders");
-const OrderDetail = require("../models/ordersDetail");
-const Cart = require("../models/cart");
-const Type = require("../models/type");
-const ImageProduct = require("../models/imageProduct");
+const User = require("../models/User");
+const Product = require("../models/Product");
+const PossesProduct = require("../models/PossesProduct");
+const Order = require("../models/Orders");
+const OrderDetail = require("../models/OrdersDetail");
+const Type = require("../models/Type");
+const ImageProduct = require("../models/ImageProduct");
+const Cart = require("../models/Cart");
 
 class UserController {
   // View cart
@@ -21,17 +21,7 @@ class UserController {
       // Retrieve product details for each cart item
       for (let i = 0; i < cartItems.length; i++) {
         const product = await Product.findOne({
-          where: { id: cartItems.productId },
-          include: [
-            {
-              model: Type,
-              attributes: ['gender']
-            },
-            {
-              model: ImageProduct,
-              attributes: ['link']
-            }
-          ],
+          where: { id: cartItems[i].productId },
         });
 
         myCart.push(product);

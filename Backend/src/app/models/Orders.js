@@ -1,6 +1,6 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../../config/db/index");
-const User = require("./user");
+const User = require("./User");
 
 class Order extends Model { }
 
@@ -11,7 +11,6 @@ Order.init(
       primaryKey: true,
       autoIncrement: true,
     },
-<<<<<<< HEAD
     totalPrice: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -64,11 +63,6 @@ Order.init(
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-=======
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
->>>>>>> 5b17914f8fa6afac0e8b170a339486f9afe20566
       field: "id_user",
     },
   },

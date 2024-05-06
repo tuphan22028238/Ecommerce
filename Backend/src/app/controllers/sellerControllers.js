@@ -1,11 +1,10 @@
-const User = require("../models/user");
-const PossesProduct = require("../models/possesProduct");
-const Product = require("../models/product");
-const Order = require("../models/orders");
-const OrderDetail = require("../models/ordersDetail");
-const ImageProduct = require("../models/imageProduct");
-const Cart = require("../models/cart");
-
+const User = require("../models/User");
+const PossesProduct = require("../models/PossesProduct");
+const Product = require("../models/Product");
+const Order = require("../models/Orders");
+const OrderDetail = require("../models/OrdersDetail");
+const ImageProduct = require("../models/ImageProduct");
+const Cart = require("../models/Cart");
 
 class SellerController {
   async viewListProduct(req, res, next) {
