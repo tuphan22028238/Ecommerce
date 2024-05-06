@@ -68,6 +68,11 @@ Product.init(
             allowNull: true,
             field: "id_type",
         },
+        sellerId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            field: "id_seller",
+        },
     },
     {
         sequelize,

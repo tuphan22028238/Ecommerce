@@ -8,5 +8,4 @@ route.delete("/deleteProduct/:id", SellerController.deleteProduct);
 route.post("/addProduct", SellerController.addProduct);
 route.get("/reqEdit/:id", SellerController.requestEditProduct);
 route.put("/editProduct/:id", SellerController.editProduct);
-
 module.exports = route;

@@ -20,7 +20,7 @@ CREATE TABLE `user` (
 CREATE TABLE `orders` (
     `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
     `total_price` INT(11),
-    `status` TINYINT(4) NOT NULL DEFAULT '1' COMMENT '0 : Done - 1 : Processing - 2 : Cancelled - 3 : Shipping - 4 : Shipped - 5 : Refunded - 6 : Returned',,
+    `status` TINYINT(4) NOT NULL DEFAULT '1',
     `payment_mode` TINYINT(4),
     `payment_date` DATETIME,
     `shipment_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -47,17 +47,21 @@ CREATE TABLE `product` (
     `name` VARCHAR(100) NOT NULL,
     `price` INT(11) NOT NULL,
     `description` NVARCHAR(4000),
-    `quantity_per_unit` INT(11),
-    `unit_in_stock` INT(11) NOT NULL,
-    `unit_in_orders` INT(11),
-    `re_order_level` INT(11),
+    `quantityPerUnit` INT(11),
+    `unitInStock` INT(11) NOT NULL,
+    `unitInOrders` INT(11),
+    `reOrderLevel` INT(11),
     `list_color` VARCHAR(100) NOT NULL,
     `status` TINYINT(4) NOT NULL DEFAULT '1',
     `created_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `id_type` INT(11) NOT NULL,
+    `id_seller` INT(11) NOT NULL,
     INDEX `id_type` (`id_type`),
+    INDEX `id_seller` (`id_seller`),
     FOREIGN KEY (`id_type`)
-        REFERENCES `type` (`id`)
+        REFERENCES `type` (`id`),
+    FOREIGN KEY (`id_seller`)
+        REFERENCES `user` (`id`)
 );
 CREATE TABLE `orders_detail` (
     `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
@@ -108,5 +112,13 @@ CREATE TABLE `reviews` (
     FOREIGN KEY (`product_id`)
         REFERENCES `product` (`id`)
 );
+
+CREATE TABLE `cart` (
+    `cart_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `user_id` INT NOT NULL,
+    `product_id` INT NOT NULL,
+    FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 COMMIT;

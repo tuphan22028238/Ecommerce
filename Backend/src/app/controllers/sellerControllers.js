@@ -3,7 +3,8 @@ const PossesProduct = require("../models/possesProduct");
 const Product = require("../models/product");
 const Order = require("../models/orders");
 const OrderDetail = require("../models/ordersDetail");
-const ImageProduct = require("../models/ImageProduct");
+const ImageProduct = require("../models/imageProduct");
+const Cart = require("../models/cart");
 
 
 class SellerController {
@@ -60,11 +61,11 @@ class SellerController {
                 });
             });
 
-            // await Order.findAll({ where: { productId: product.id } }).then(carts => {
-            //     carts.forEach(cart => {
-            //         cart.destroy();
-            //     });
-            // });
+            await Cart.findAll({ where: { productId: product.id } }).then(carts => {
+                carts.forEach(cart => {
+                    cart.destroy();
+                });
+            });
 
             await OrderDetail.findAll({ where: { productId: product.id } }).then(orderDetails => {
                 orderDetails.forEach(async orderDetail => {
@@ -103,16 +104,6 @@ class SellerController {
         catch (errors) {
             console.error("Error edit product:", errors.message);
             res.status(400).send("Error edit product");
-        }
-    }
-    async getQuantity(req, res, next) {
-        try {
-            const product = await Product.findOne({ where: { id: req.params.id } });
-            res.send(product.getDataValue('unitInStock'));
-        }
-        catch (errors) {
-            console.error("Error get quantity:", errors.message);
-            res.status(400).send("Error get quantity");
         }
     }
 }
