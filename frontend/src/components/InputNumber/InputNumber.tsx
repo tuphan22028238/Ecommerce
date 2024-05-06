@@ -1,30 +1,29 @@
-import { rest } from 'lodash'
-import Register from 'pages/Register'
+import React from 'react'
 import type { RegisterOptions, UseFormRegister } from 'react-hook-form'
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string
   classNameInput?: string
   classNameError?: string
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  register?: UseFormRegister<any>
-  rules?: RegisterOptions
 }
 
-export default function Input({
+export default function InputNumber({
   errorMessage,
   className,
-  name,
-  register,
-  rules,
   classNameInput = 'p-3 w-full outline-none border border-gray-300 focus:border-gray-500 focus:shadow-sm rounded-sm',
   classNameError = 'mt-1 text-red-600 min-h-[1rem] text-sm',
+  onChange,
   ...rest
 }: Props) {
-  const registerResult = register && name ? register(name, rules) : {}
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target
+    if ((/^\d+$/.test(value) || value === '') && onChange) {
+      onChange(event)
+    }
+  }
   return (
     <div className={className}>
-      <input className={classNameInput} {...registerResult} {...rest} />
+      <input className={classNameInput} onChange={handleChange} {...rest} />
       <div className={classNameError}>{errorMessage}</div>
     </div>
   )

@@ -12,7 +12,7 @@ class Http {
   constructor() {
     this.accessToken = getAccessTokenFromLS()  // get token from local storage using Ram instead of Disk be cause in class
     this.instance = axios.create({
-      baseURL: 'http://localhost:8000', // need a api url
+      baseURL: 'https://api-ecom.duthanhduoc.com/', // need a api url
       timeout: 10000,
       headers: {
         'Content-Type' : 'application/json',
