@@ -25,11 +25,13 @@ class SellerController {
 
   async addProduct(req, res, next) {
     try {
+      console.log(req.body);
       const product = await Product.create({
         name: req.body.name,
         price: req.body.price,
         unitInStock: req.body.stock,
-        id_type: req.body.type,
+        typeId: req.body.type ,
+        sellerId: req.body.idSeller
       });
       const possesProduct = await PossesProduct.create({
         userId: req.body.userId,

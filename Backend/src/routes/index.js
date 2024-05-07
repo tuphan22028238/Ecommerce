@@ -8,8 +8,8 @@ const { protect, checkRole } = require('../app/middlewares/AuthenciationMiddleva
 function route(app) {
     app.use('/auth', authController)
     app.use('/admin', protect, checkRole, adminController)
-    app.use('/user', userController)
-    app.use('/seller', sellerController)
+    app.use('/user', protect, userController)
+    app.use('/seller',protect, sellerController)
     app.use('/', serverController)
 }
 

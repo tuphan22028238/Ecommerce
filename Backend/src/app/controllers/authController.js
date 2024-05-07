@@ -26,9 +26,11 @@ class authController {
     const infor = await User.findOne({
       where: {
         username: req.body.username,
-        password: req.body.password,
       },
     });
+
+    console.log(req.body.username, req.body.password);
+    console.log(infor);
     if (infor !== null) {
       const token = createToken(infor.id);
       res.cookie("jwt", token, { httpOnly: true });
