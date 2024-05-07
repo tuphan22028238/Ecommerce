@@ -3,119 +3,102 @@ SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+07:00";
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTEorders_detailR_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Cấu trúc bảng cho bảng `user`
---
-
 CREATE TABLE `user` (
     `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
-    `username` VARCHAR(100) DEFAULT NULL,
-    `password` VARCHAR(200) DEFAULT NULL,
-    `name` VARCHAR(100) DEFAULT NULL,
-    `dob` DATE DEFAULT NULL,
-    `phone` CHAR(12) DEFAULT NULL,
-    `role` TINYINT(4) NOT NULL DEFAULT '1' COMMENT '1 : Customer- 2 : Seller',
-    `address` VARCHAR(100) DEFAULT NULL,
-    `email` VARCHAR(100) DEFAULT NULL,
-    `status` TINYINT(4) NOT NULL DEFAULT '1' COMMENT '1: Active- 0 : Inactive',
+    `username` VARCHAR(100),
+    `password` VARCHAR(200),
+    `name` VARCHAR(100),
+    `dob` DATE,
+    `phone` CHAR(12),
+    `role` TINYINT(4) NOT NULL DEFAULT '1' COMMENT '0: seller, 1: customer',
+    `address` VARCHAR(100),
+    `email` VARCHAR(100),
+    `status` TINYINT(4) NOT NULL DEFAULT '1',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
-
---
--- Cấu trúc bảng cho bảng `orders`
---
+);
 
 CREATE TABLE `orders` (
     `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
-    `total_price` INT(11) NOT NULL,
+    `total_price` INT(11),
     `status` TINYINT(4) NOT NULL DEFAULT '1' COMMENT '0 : Done - 1 : Processing - 2 : Cancelled - 3 : Shipping - 4 : Shipped - 5 : Refunded - 6 : Returned',
-    payment_mode TINYINT(4) NOT NULL COMMENT '0: Tiền mặt - 1: Chuyển khoản',
-    payment_date DATETIME,
-    shipment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    require_date TIMESTAMP,
-    shipped_date TIMESTAMP,
-    address VARCHAR(255),
-    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    id_user INT(11) NOT NULL
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+    `payment_mode` TINYINT(4),
+    `payment_date` DATETIME,
+    `shipment_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `require_date` TIMESTAMP,
+    `shipped_date` TIMESTAMP,
+    `address` VARCHAR(255),
+    `created_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `id_user` INT(11) NOT NULL,
+    INDEX `id_user` (`id_user`),
+    CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`id_user`)
+        REFERENCES `user` (`id`)
+);
 
---
--- Cấu trúc bảng cho bảng `orders_detail` / cart
---
-
-CREATE TABLE `orders_detail` (
+CREATE TABLE `type` (
     `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
-    `quantity` INT(11) NOT NULL COMMENT 'số lượng',
-    unit_price DECIMAL(10 , 2 ),
-    color INT(11) DEFAULT NULL,
-    discount DECIMAL(10 , 2 ) DEFAULT NULL,
-    id_product INT(11) NOT NULL,
-    id_orders INT(11) NOT NULL
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
-
---
--- Cấu trúc bảng cho bảng `image_product`
---
-
-CREATE TABLE `image_product` (
-    `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
-    `link` VARCHAR(300) NOT NULL,
-    `id_product` INT(11) NOT NULL
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
-
---
--- Cấu trúc bảng cho bảng `product`
---
+    `name` VARCHAR(100) NOT NULL,
+    `gender` TINYINT(4) NOT NULL,
+    `size_from` INT(11),
+    `size_to` INT(11)
+);
 
 CREATE TABLE `product` (
     `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
     `name` VARCHAR(100) NOT NULL,
     `price` INT(11) NOT NULL,
     `description` NVARCHAR(4000),
-    quantityPerUnit INT(11) DEFAULT NULL COMMENT 'số lượng',
-    unitInStock INT(11) NOT NULL,
-    unitInOrders INT(11),
-    reOrderLevel INT(11) COMMENT 'Mức tối thiểu của mặt hàng',
-    list_color VARCHAR(100) NOT NULL,
-    status TINYINT(4) NOT NULL DEFAULT '1' COMMENT '0: Không bán - 1: mới - 2 : bình thường',
-	created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    id_type INT(11) NOT NULL
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
-
---
--- Cấu trúc bảng cho bảng `type`
---
-
-CREATE TABLE `type` (
+    `quantity_per_unit` INT(11),
+    `unit_in_stock` INT(11) NOT NULL,
+    `unit_in_orders` INT(11),
+    `re_order_level` INT(11),
+    `list_color` VARCHAR(100) NOT NULL,
+    `status` TINYINT(4) NOT NULL DEFAULT '1',
+    `created_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `id_type` INT(11) NOT NULL,
+    `id_seller` INT(11) NOT NULL,
+    INDEX `id_type` (`id_type`),
+    INDEX `id_seller` (`id_seller`),
+    FOREIGN KEY (`id_type`)
+        REFERENCES `type` (`id`),
+    FOREIGN KEY (`id_seller`)
+        REFERENCES `user` (`id`)
+);
+CREATE TABLE `orders_detail` (
     `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
-    `name` VARCHAR(100) NOT NULL,
-	`gender` TINYINT(4) NOT NULL COMMENT '0: nữ - 1: nam',
-    `size_from` INT(11) DEFAULT NULL,
-    `size_to` INT(11) DEFAULT NULL
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+    `quantity` INT(11) NOT NULL,
+    `unit_price` DECIMAL(10 , 2 ),
+    `color` INT(11),
+    `discount` DECIMAL(10 , 2 ),
+    `id_product` INT(11) NOT NULL,
+    `id_orders` INT(11) NOT NULL,
+    `size` INT(11),
+    INDEX `id_product` (`id_product`),
+    INDEX `id_orders` (`id_orders`),
+    FOREIGN KEY (`id_product`)
+        REFERENCES `product` (`id`),
+    FOREIGN KEY (`id_orders`)
+        REFERENCES `orders` (`id`)
+);
 
---
--- Cấu trúc bảng cho bảng `posses_product`
---
+CREATE TABLE `image_product` (
+    `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
+    `link` VARCHAR(300) NOT NULL,
+    `id_product` INT(11) NOT NULL,
+    INDEX `id_product` (`id_product`),
+    FOREIGN KEY (`id_product`)
+        REFERENCES `product` (`id`)
+);
+
 
 CREATE TABLE `posses_product` (
-    `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
     `user_id` INT NOT NULL,
     `product_id` INT NOT NULL,
-    FOREIGN KEY (user_id)
-        REFERENCES `user` (id),
-    FOREIGN KEY (product_id)
-        REFERENCES `product` (id)
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
-
---
--- Cấu trúc bảng cho bảng `reviews`
---
+    FOREIGN KEY (`user_id`)
+        REFERENCES `user` (`id`),
+    FOREIGN KEY (`product_id`)
+        REFERENCES `product` (`id`)
+);
 
 CREATE TABLE `reviews` (
     `review_id` INT PRIMARY KEY AUTO_INCREMENT,
@@ -125,88 +108,22 @@ CREATE TABLE `reviews` (
     `review_text` TEXT NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id)
-        REFERENCES `user` (id),
-    FOREIGN KEY (product_id)
-        REFERENCES `product` (id)
+    FOREIGN KEY (`user_id`)
+        REFERENCES `user` (`id`),
+    FOREIGN KEY (`product_id`)
+        REFERENCES `product` (`id`)
 );
 
---
--- Cấu trúc bảng cho bảng `carts`
--- Dành cho user 
---
-CREATE TABLE `carts` (
+CREATE TABLE `cart` (
+    `cart_id` INT PRIMARY KEY AUTO_INCREMENT,
     `user_id` INT NOT NULL,
     `product_id` INT NOT NULL,
-    FOREIGN KEY (`product_id`)
-        REFERENCES `product` (`id`),
-    FOREIGN KEY (`user_id`)
-        REFERENCES `user` (`id`)
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
-
---
--- Chỉ mục cho các bảng
---
-
---
--- Chỉ mục cho bảng `orders`
---
-ALTER TABLE `orders`
-  ADD KEY `id_user` (`id_user`);
-
---
--- Chỉ mục cho bảng `orders_detail`
---
-
-ALTER TABLE `orders_detail`
-  ADD KEY `id_product` (`id_product`),
-  ADD KEY `id_orders` (`id_orders`);
-
---
--- Chỉ mục cho bảng `image_product`
---
-ALTER TABLE `image_product`
-  ADD KEY `id_product` (`id_product`);
-
---
--- Chỉ mục cho bảng `product`
---
-ALTER TABLE `product`
-  ADD KEY `id_type` (`id_type`);
-  
---
--- Các ràng buộc cho các bảng đã đổ
---
-
---
--- Các ràng buộc cho bảng `orders`
---
-ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`);
-
---
--- Các ràng buộc cho bảng `orders_detail`
---
-ALTER TABLE `orders_detail`
-  ADD CONSTRAINT `orders_detail_ibfk_1` FOREIGN KEY (`id_product`) REFERENCES `product` (`id`),
-  ADD CONSTRAINT `orders_detail_ibfk_2` FOREIGN KEY (`id_orders`) REFERENCES `orders` (`id`);
-
---
--- Các ràng buộc cho bảng `image_product`
---
-ALTER TABLE `image_product`
-  ADD CONSTRAINT `image_product_ibfk_1` FOREIGN KEY (`id_product`) REFERENCES `product` (`id`);
-
---
--- Các ràng buộc cho bảng `product`
---
-ALTER TABLE `product`
-  ADD CONSTRAINT `product_ibfk_1` FOREIGN KEY (`id_type`) REFERENCES `type` (`id`);
+    `quantity` INT,
+    `color` INT,
+    `discount` DECIMAL(10 , 2 ),
+    `size` INT,
+    FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 COMMIT;
-
--- Note: Insert into Orders values(123,'PoppyCounter','Chocltae',now(),now())
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

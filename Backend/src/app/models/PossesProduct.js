@@ -1,13 +1,16 @@
-const { Sequelize, Model, DataTypes } = require("sequelize");
+const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../../config/db/index");
+const User = require("./User");
+const Product = require("./Product");
 
-class PossesProduct extends Model {}
+class PossesProduct extends Model { }
 
 PossesProduct.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      autoIncrement: true,
     },
     userId: {
       type: DataTypes.INTEGER,
@@ -18,7 +21,7 @@ PossesProduct.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       field: "product_id",
-    }
+    },
   },
   {
     sequelize,
@@ -27,5 +30,9 @@ PossesProduct.init(
     freezeTableName: true,
   }
 );
+
+// Định nghĩa các ràng buộc ngoại khoá
+PossesProduct.belongsTo(User, { foreignKey: "userId" });
+PossesProduct.belongsTo(Product, { foreignKey: "productId" });
 
 module.exports = PossesProduct;

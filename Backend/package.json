@@ -1,5 +1,5 @@
 {
-  "name": "se-project",
+  "name": "ecommerce",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -9,26 +9,32 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BlackRose484/SE-project.git"
+    "url": "git+https://github.com/tuphan22028238/Ecommerce.git"
   },
   "keywords": [
-    "seproject"
+    "ecommerce"
   ],
   "author": "hung",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/BlackRose484/SE-project/issues"
+    "url": "https://github.com/tuphan22028238/Ecommerce/issues"
   },
-  "homepage": "https://github.com/BlackRose484/SE-project#readme",
+  "homepage": "https://github.com/tuphan22028238/Ecommerce#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
-    "dotenv": "^16.4.5",
+    "dotenv": "16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.9.4",
     "nodemon": "^3.1.0",
-    "sequelize": "^6.37.2"
+    "sequelize": "^6.37.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.1",
+    "@babel/core": "^7.24.4",
+    "@babel/node": "^7.23.9",
+    "@babel/preset-env": "^7.24.4"
   }
 }

@@ -3,7 +3,7 @@ const authController = require('./auth')
 const adminController = require('./admin')
 const userController = require('./user')
 const sellerController = require('./seller')
-const {protect, checkRole} = require('../app/middlewares/AuthenciationMiddlevare')
+const { protect, checkRole } = require('../app/middlewares/AuthenciationMiddlevare')
 
 function route(app) {
     app.use('/auth', authController)
