@@ -36,7 +36,7 @@ class Http {
         const {url} = response.config
         if(url === '/auth/login' || url === '/auth/register') {
           try {
-            this.accessToken = response.data.access_token
+            this.accessToken = response.data.accessToken
             setAccessTokenToLS(this.accessToken)
             setProfileToLS(response.data.id)      
           } catch (error) {
