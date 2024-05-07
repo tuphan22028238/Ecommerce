@@ -7,6 +7,7 @@ import Popover from "../../components/Popover";
 import { useMutation } from "@tanstack/react-query";
 import { logout } from "../../apis/auth.api";
 import { AppContext } from "../../context/app.context";
+import {getProfileFromLS} from "../../ultis/auth"
 import Profile from "pages/Profile";
 
 function Header() {
@@ -33,7 +34,7 @@ function Header() {
           
           <div className="flex justify-between items-center pr-20">
             <div className="flex items-center gap-2 hover:text-gray-400 cursor-pointer pl-2">
-                 <Link to='/'>Kênh người bán</Link>  
+                 <Link to={`/seller/listProduct/${getProfileFromLS()}`}>Kênh người bán</Link>  
                  {/* // nhớ cấu hình route sang kênh bán */}
             </div>
             <div className="flex justify-end text-sm">
@@ -60,7 +61,7 @@ function Header() {
               <div className="bg-white relative shadow-md rounded-sm border border-gray-200">
                 <div className="flex flex-col py-2 px-3">
                   <Link to='/profile' className="py-2 px-3 hover:text-orange-500 mt-2 text-left">User</Link>
-                  <Link to='/profile' className="py-2 px-3 hover:text-orange-500 mt-2 text-left">Giỏ hàng</Link>
+                  <Link to='/cart' className="py-2 px-3 hover:text-orange-500 mt-2 text-left">Giỏ hàng</Link>
                   <button onClick={handleLogout} className="py-2 px-3 hover:text-orange-500 mt-2 text-left">Logout</button>
                 </div>
               </div>

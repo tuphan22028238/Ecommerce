@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 
-export default function Product() {
+export default function Product(props: any) {
+
+const data = props.data;
+
 return (
-<Link to='/'>
+<Link to={`/show/${data.id}`}>
   <div className="bg-white shadow rounded-sm hover:translate-y-[-0.065rem] hover:shadow-md duration-100 transition-transform hover:border-red-600 border-2 border-white">
     <div className="w-full pt-[100%] relative">
       <img src="https://api-ecom.duthanhduoc.com/images/a7fb7a18-743a-42bb-bead-36370c1d1aba.jpg" 
@@ -10,18 +13,18 @@ return (
     </div>
     <div className="p-2 over-flow-hidden">
       <div className="min-h-[1.75rem] line-clamp-2 text-sm">
-      ĐIỆN THOẠI APPLE IPHONE 12 64GB - HÀNG CHÍNH HÃNG VNA
+      {data.name}
         
       </div>
       <div className="flex items-center mt-3">
         <div className="line-through max-w-[50%] text-gray-500 truncate">
           <span className="text-xs">d</span>
-          <span>100.000.000</span>
+          <span>{data.price}</span>
 
         </div>
         <div className="text-orange-400 truncate ml-1">
           <span className="text-xs">đ</span>
-          <span>50.000.000</span>
+          <span>{data.price - 500}</span>
         </div>
       </div>
       <div className="mt-3 flex items-center justify-end">
@@ -35,7 +38,7 @@ return (
           </div>
         </div>
         <div className="ml-2 text-sm">
-          <span>5.66k</span>
+          <span>{data.unitInStock}</span>
           <span className="ml-1">Đã bán</span>
         </div>
       </div>

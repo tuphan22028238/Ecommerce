@@ -4,6 +4,9 @@ import Registerlayout from "./layouts/Registerlayout"
 import Login from "./pages/Login"
 import ProductList from "./pages/ProductList"
 import Register from "./pages/Register"
+import ProductDetail from "./pages/ProductDetail"
+import PossesProduct from "./pages/PossesProduct"
+import EditOrAddProduct from "./pages/PossesProduct/EditOrAddProduct"
 import { Navigate, Outlet, useRoutes } from "react-router-dom"
 import { useContext } from "react"
 import { AppContext } from "./context/app.context"
@@ -61,7 +64,38 @@ export default function useRouteElements() {
         </MainLayout>
       )
     },
-    
+    {
+      path: path.product,
+      element: (
+        <MainLayout>
+          <ProductDetail />
+        </MainLayout>
+      )
+    },
+    {
+      path: path.seller.list_product,
+      element: (
+        <MainLayout>
+          <PossesProduct />
+        </MainLayout>
+      )
+    },
+    {
+      path: path.seller.edit_product,
+      element: (
+        <MainLayout>
+          <EditOrAddProduct />
+        </MainLayout>
+      )
+    },
+    {
+      path: path.seller.add_product,
+      element: (
+        <MainLayout>
+          <EditOrAddProduct />
+        </MainLayout>
+      )
+    }
     
   ])
   return routerElements

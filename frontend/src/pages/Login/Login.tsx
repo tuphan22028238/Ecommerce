@@ -30,19 +30,16 @@ export default function Login() {
 
   const loginMutation = useMutation({
     mutationFn: (body: Omit<Schema, 'confirm_password'>) => login(body)
-    
   })
+  
   const onSubmit = handleSubmit(
     (data) => {
     
     loginMutation.mutate(data, {
       onSuccess: (data) => {
-        console.log(data)
         setIsAuthenticated(true)
         setProfile(data.data.data.user)
         navigate('/')
-
-      
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntity<ErrorResponse<FormData>>(error)) {
