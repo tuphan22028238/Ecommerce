@@ -105,7 +105,7 @@ function Header() {
           </div>
         </div>
         <div className='mt-4 grid grid-cols-12 gap-4'>
-          <Link to='/' className='col-span-2'>
+          <Link to='/' className='col-span-3'>
             <img className='w-21 h-14 pl-5' src='src/images/logo.png' alt='' />
           </Link>
           <form className='col-span-8 translate-y-4'>
@@ -136,7 +136,7 @@ function Header() {
             </div>
           </form>
 
-          <div className='col-span-2 flex size-8 translate-y-6 cursor-pointer items-center justify-end  hover:text-gray-400'>
+          <div className='col-span-1 flex size-8 translate-y-6 cursor-pointer items-center justify-end  hover:text-gray-400'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'

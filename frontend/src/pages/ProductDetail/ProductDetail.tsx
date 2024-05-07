@@ -3,6 +3,9 @@ import productApi from '../../apis/product.api'
 import { useParams } from 'react-router-dom'
 import { formatCurrency, formatNumberToSocialStyle, rateSale } from '../../ultis/utils'
 import InputNumber from '../../components/InputNumber'
+import { useEffect, useMemo, useState } from 'react'
+import { set } from 'lodash'
+import { Product } from 'types/product.type'
 
 export default function ProductDetail() {
   const { id } = useParams()
@@ -10,26 +13,58 @@ export default function ProductDetail() {
     queryKey: ['product', id],
     queryFn: () => productApi.getProductDetail(id as string)
   })
-
   const product = ProductDetailData?.data.data
+
+  const [currentIndexImages, setCurrentIndexImages] = useState([0, 5])
+  const [activeImage, setActiveImage] = useState('')
+
+  const currentImages = useMemo(
+    () => (product ? product.images.slice(...currentIndexImages) : []),
+    [product, currentIndexImages]
+  )
+
+  useEffect(() => {
+    if (product && product.images.length > 0) setActiveImage(product.images[0])
+  }, [product])
+
+  const next = () => {
+    if (currentIndexImages[1] < (product as Product).images.length) {
+      setCurrentIndexImages((prev) => [prev[0] + 1, prev[1] + 1])
+    }
+  }
+
+  const prev = () => {
+    if (currentIndexImages[0] > 0) {
+      setCurrentIndexImages((prev) => [prev[0] - 1, prev[1] - 1])
+    }
+  }
+
+  const chooseActive = (img: string) => {
+    setActiveImage(img)
+  }
+  console.log(currentIndexImages[1])
+  console.log(product?.images.length)
 
   console.log(product)
   if (!product) return <div>Loading...</div>
   return (
     <div className='bg-gray-300 py-6'>
-      <div className='bg-white p-4 shadow'>
-        <div className='container'>
+      <div className='container'>
+        <div className='bg-white p-4 shadow'>
           <div className='grid grid-cols-12 gap-9'>
             <div className='col-span-5'>
               <div className='relative w-full pt-[100%] shadow'>
                 <img
-                  src={product.image}
+                  src={activeImage}
                   alt={product.name}
                   className='absolute left-0 top-0 h-full w-full bg-white object-cover'
                 />
               </div>
               <div className='relative mt-4 grid grid-cols-5 gap-1'>
-                <button className='absolute left-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/20 text-white'>
+                <button
+                  className='absolute left-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/20 text-white'
+                  onClick={prev}
+                >
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     fill='none'
@@ -41,12 +76,12 @@ export default function ProductDetail() {
                     <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5 8.25 12l7.5-7.5' />
                   </svg>
                 </button>
-                {product.images.slice(0, 5).map((image, index) => {
-                  const isActive = index === 0
+                {currentImages.map((image, index) => {
+                  const isActive = image === activeImage
                   return (
-                    <div className='relative w-full pt-[100%]' key={image}>
+                    <div className='relative w-full pt-[100%]' key={index} onMouseEnter={() => chooseActive(image)}>
                       <img
-                        src={product.image}
+                        src={image}
                         alt={product.name}
                         className='absolute left-0 top-0 h-full w-full bg-white object-cover'
                       />
@@ -54,7 +89,10 @@ export default function ProductDetail() {
                     </div>
                   )
                 })}
-                <button className='absolute right-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/20 text-white'>
+                <button
+                  className='absolute right-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/20 text-white'
+                  onClick={next}
+                >
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     fill='none'
@@ -84,7 +122,10 @@ export default function ProductDetail() {
               <div className='mt-8 flex items-center '>
                 <div className='capitalize text-gray-500'>Số lượng</div>
                 <div className='ml-10 flex items-center'>
-                  <button className='flex h-8 w-8 items-center justify-center rounded-l-sm border-gray-300 text-gray-600 '>
+                  <button
+                    className='flex h-8 w-8 items-center justify-center rounded-l-sm border-gray-300 text-gray-600 '
+                    onClick={next}
+                  >
                     <svg
                       xmlns='http://www.w3.org/2000/svg'
                       fill='none'
