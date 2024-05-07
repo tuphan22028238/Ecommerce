@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 function protect(req, res, next) {
-  const token = req.cookies.jwt;
+  const token = req.headers['authorization'] || req.cookies.jwt;
   if (token) {
     jwt.verify(token, "MarketSwift", async (err, decoded) => {
       if (err) {
