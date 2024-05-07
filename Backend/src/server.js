@@ -3,8 +3,10 @@ const route = require("./routes");
 const cookie = require("cookie-parser");
 const db = require("./config/db");
 require("dotenv").config({ path: "Backend/src/.env" });
+const cors = require("cors");
 
 const app = express();
+app.use(cors());
 const server = require("http").createServer(app);
 
 app.use(
