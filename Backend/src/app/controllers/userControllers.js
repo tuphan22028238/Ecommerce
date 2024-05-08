@@ -8,6 +8,17 @@ const ImageProduct = require("../models/ImageProduct");
 const Cart = require("../models/Cart");
 
 class UserController {
+
+  async viewProfile(req, res, next) {
+    try {
+      const profile = await User.findOne({where : {id : req.params.id}});
+      res.send(profile);
+    } catch (error) {
+      console.error("Error getting profile:", error.message);
+      res.status(500).send("Error getting profile");
+    }
+  }
+
   // View cart
   async viewCart(req, res, next) {
     try {
@@ -61,6 +72,7 @@ class UserController {
         });
         res.send("Product added to cart");
       }
+      // Update the quantity of the product in the cart
     } catch (error) {
       console.error("Error adding product to cart:", error.message);
       res.status(400).send("Error adding product to cart");

@@ -9,7 +9,7 @@ function route(app) {
     app.use('/auth', authController)
     app.use('/admin', protect, checkRole, adminController)
     app.use('/user', protect, userController)
-    app.use('/seller',protect, sellerController)
+    app.use('/seller',protect, checkRole,  sellerController)
     app.use('/', serverController)
 }
 
