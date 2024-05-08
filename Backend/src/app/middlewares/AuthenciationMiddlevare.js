@@ -19,8 +19,8 @@ function protect(req, res, next) {
 }
 
 function checkRole(req, res, next) {
-  const role = req.cookies.role;
-  if (role == 0) {
+  const role = req.headers['role']
+  if (role == 2) {
     next();
   } else {
     res.send("You are not seller");
