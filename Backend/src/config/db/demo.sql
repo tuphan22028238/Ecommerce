@@ -24,11 +24,11 @@ VALUES (2, 250000, 1, NULL, 1, 1),
         (3, 200000, 2, 0.1, 9, 4);
 	
 -- product
-INSERT INTO `product` (`name`, `price`, `description`, `quantity_per_unit`, `unit_in_stock`, `unit_in_orders`, `re_order_level`, `list_color`, `status`, `id_type`, `id_seller`)
-VALUES ('Áo thun nam', 200000, 'Áo thun cotton dành cho nam', 1, 100, 10, 20, 'Đen, Trắng, Xanh', 1, 1,1),
-       ('Váy hoa nữ', 300000, 'Váy hoa dài tay dành cho nữ', 1, 50, 5, 15, 'Hồng, Xanh lá, Vàng', 1, 3, 1),
-         ('Quần jean nam', 500000, 'Quần jean dành cho nam', 1, 30, 3, 10, 'Xanh, Đen, Trắng', 1, 2, 1),
-         ('Áo khoác nam', 700000, 'Áo khoác dành cho nam', 1, 20, 2, 5, 'Đen, Xanh, Đỏ', 1, 4, 1);
+INSERT INTO `product` (`name`, `price`, `description`, `quantity_per_unit`, `unit_in_stock`, `unit_in_orders`, `re_order_level`, `list_color`, `status`, `id_type`, `id_seller`, `sold`, `image`)
+VALUES ('Áo thun nam', 200000, 'Áo thun cotton dành cho nam', 1, 100, 10, 20, 'Đen, Trắng, Xanh', 1, 1,1, 10, null),
+       ('Váy hoa nữ', 300000, 'Váy hoa dài tay dành cho nữ', 1, 50, 5, 15, 'Hồng, Xanh lá, Vàng', 1, 3, 1, 23, null),
+         ('Quần jean nam', 500000, 'Quần jean dành cho nam', 1, 30, 3, 10, 'Xanh, Đen, Trắng', 1, 2, 1,123, null),
+         ('Áo khoác nam', 700000, 'Áo khoác dành cho nam', 1, 20, 2, 5, 'Đen, Xanh, Đỏ', 1, 4, 1,231, null);
 -- type 
 INSERT INTO `type` ( `name`, `gender`, `size_from`, `size_to`) VALUES
 ( 'Áo sơ mi', 1, 36, 42),
