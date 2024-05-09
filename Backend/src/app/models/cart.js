@@ -1,15 +1,13 @@
-const { DataTypes, Model } = require("sequelize");
+const { Sequelize, Model, DataTypes } = require("sequelize");
 const sequelize = require("../../config/db/index");
 
-class Cart extends Model { }
+class Cart extends Model {}
 
 Cart.init(
   {
-    cartsId: {
+    id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
-      field: "cart_id",
     },
     userId: {
       type: DataTypes.INTEGER,
@@ -21,32 +19,14 @@ Cart.init(
       allowNull: false,
       field: "product_id",
     },
-    quantity: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      field: "quantity",
-    },
-    color: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      field: "color",
-    },
-    discount: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      field: "discount",
-    },
-    size: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      field: "size",
-    },
+    
   },
   {
     sequelize,
-    modelName: "cart",
+    modelName: "carts",
     timestamps: false,
     freezeTableName: true,
   }
 );
+
 module.exports = Cart;
