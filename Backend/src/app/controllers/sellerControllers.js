@@ -2,9 +2,9 @@ const User = require("../models/User");
 const PossesProduct = require("../models/PossesProduct");
 const Product = require("../models/Product");
 const Order = require("../models/Orders");
-const OrderDetail = require("../models/OrdersDetail");
+const OrderDetail = require("../models/ordersDetail");
 const ImageProduct = require("../models/ImageProduct");
-const Cart = require("../models/Cart");
+const Cart = require("../models/cart");
 
 class SellerController {
   async viewListProduct(req, res, next) {

@@ -2,10 +2,10 @@ const User = require("../models/User");
 const Product = require("../models/Product");
 const PossesProduct = require("../models/PossesProduct");
 const Order = require("../models/Orders");
-const OrderDetail = require("../models/OrdersDetail");
+const OrderDetail = require("../models/ordersDetail");
 const Type = require("../models/Type");
 const ImageProduct = require("../models/ImageProduct");
-const Cart = require("../models/Cart");
+const Cart = require("../models/cart");
 
 class UserController {
   // View cart
