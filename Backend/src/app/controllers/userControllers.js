@@ -8,7 +8,8 @@ const ImageProduct = require("../models/ImageProduct");
 const Cart = require("../models/Cart");
 
 class UserController {
-
+  //-----------------------------------Handle Profile-----------------------------------------------------//
+  // View profile
   async viewProfile(req, res, next) {
     try {
       const profile = await User.findOne({ where: { id: req.params.id } });
@@ -19,6 +20,29 @@ class UserController {
     }
   }
 
+  // Update profile
+  async updateProfile(req, res, next) {
+    try {
+      const { name, email, phone, address } = req.body;
+      const user = await User.findOne({ where: { id: req.params.id } });
+
+      if (user) {
+        user.name = name;
+        user.email = email;
+        user.phone = phone;
+        user.address = address;
+        await user.save();
+        res.send("Profile updated successfully");
+      } else {
+        res.status(404).send("User not found");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error.message);
+      res.status(400).send("Error updating profile");
+    }
+  }
+
+  //-----------------------------------Handle Cart-----------------------------------------------------//
   // View cart
   async viewCart(req, res, next) {
     try {
@@ -131,21 +155,21 @@ class UserController {
       res.status(400).send("Error updating product in cart");
     }
   }
-  //-------------------------------------------------------------------------------------//
+  //-----------------------------------Handle Orders-----------------------------------------------------//
 
   // Checkout
-  async checkout(req, res, next) {
+  async checkOut(req, res, next) {
     try {
       const userId = req.params.id;
-      const selectedItems = req.body.selectedItems; // Array of selected item
       let cartItems = await this.getCartItems(userId);
-
-      cartItems = cartItems.filter(item => selectedItems.includes(item.id));
 
       if (cartItems.length > 0) {
         this.displayOrderSummary(cartItems);
+
         const paymentInfo = await this.collectPaymentInfo(req);
+
         await this.placeOrder(paymentInfo, cartItems);
+
         res.status(200).send("Order placed and paid successfully");
       } else {
         res.status(200).send("No items selected for checkout");
@@ -159,6 +183,8 @@ class UserController {
   // Get cart items
   async getCartItems(userId) {
     const cartItems = await Cart.findAll({ where: { userId } });
+    const selectedItems = req.body.selectedItems; // Array of selected item
+    cartItems = cartItems.filter(item => selectedItems.includes(item.id));
     return cartItems;
   }
 
@@ -180,7 +206,7 @@ class UserController {
   // Place order
   async placeOrder(paymentInfo, cartItems, userId) {
     // Calculate total price
-    const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const totalPrice = cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
 
     // Set status and payment mode
     const status = 1; // Processing
@@ -197,6 +223,72 @@ class UserController {
     };
 
     await Order.create(order);
+
+    // Create order details
+    for (const item of cartItems) {
+      const orderDetail = {
+        orderId: createdOrder.id,
+        productId: item.productId,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        color: item.color,
+        discount: item.discount
+      };
+
+      await OrderDetail.create(orderDetail);
+    }
+
+    // Update product quantities
+    for (const item of cartItems) {
+      const product = await Product.findOne({ where: { id: item.productId } });
+      if (product) {
+        product.unitInStock -= item.quantity;
+        product.sold += item.quantity;
+        await product.save();
+      }
+    }
+  }
+
+  // Get order summary for latest orders
+  async getLatestOrderSummary(req, res, next) {
+    try {
+      const userId = req.params.id;
+      let orderSummary = {
+        totalItems: 0,
+        totalPrice: 0,
+        items: []
+      };
+
+      const latestOrder = await Order.findOne({ where: { id_user: userId }, order: [['createdAt', 'DESC']] });
+
+      if (latestOrder) {
+        // Get order details of the latest order
+        const orderDetails = await OrderDetail.findAll({ where: { orderId: latestOrder.id } });
+
+        for (const orderDetail of orderDetails) {
+          const product = await Product.findOne({ where: { id: orderDetail.productId } });
+          if (product) {
+            const itemSummary = {
+              productId: product.id,
+              productName: product.name,
+              quantity: orderDetail.quantity,
+              unitPrice: orderDetail.unitPrice,
+              color: orderDetail.color,
+              discount: orderDetail.discount,
+              total: orderDetail.quantity * orderDetail.unitPrice
+            };
+            orderSummary.items.push(itemSummary);
+            orderSummary.totalItems += orderDetail.quantity;
+            orderSummary.totalPrice += itemSummary.total;
+          }
+        }
+      }
+
+      res.send(orderSummary);
+    } catch (error) {
+      console.error("Error getting order summary:", error.message);
+      res.status(500).send("Error getting order summary");
+    }
   }
 
   // Update payment info for an order
@@ -222,6 +314,53 @@ class UserController {
     }
   }
 
+  // Cancel order
+  async cancelOrder(req, res) {
+    try {
+      const orderId = req.params.orderId;
+
+      const order = await Order.findOne({ where: { id: orderId } });
+
+      if (order) {
+        // Update order status to cancelled
+        order.status = 2;
+        await order.save();
+
+        // Get order items
+        const orderItems = await OrderItem.findAll({ where: { orderId: orderId } });
+
+        // Update product quantities
+        for (const item of orderItems) {
+          const product = await Product.findOne({ where: { id: item.productId } });
+          if (product) {
+            product.unitInStock += item.quantity;
+            product.sold -= item.quantity;
+            await product.save();
+          }
+        }
+
+        res.send("Order cancelled successfully");
+      } else {
+        res.status(404).send("Order not found");
+      }
+    } catch (error) {
+      console.error("Error cancelling order:", error.message);
+      res.status(200).send("Error cancelling order");
+    }
+  }
+
+  // View order history
+  async viewOrderHistory(req, res) {
+    try {
+      const userId = req.params.id;
+      const orders = await Order.findAll({ where: { userId, status: 2 } });
+      res.send(orders);
+    } catch (error) {
+      console.error("Error viewing order history:", error.message);
+      res.status(200).send("Error viewing order history");
+    }
+  }
+  //-----------------------------------End-----------------------------------------------------//
 }
 
 module.exports = new UserController;
