@@ -25,14 +25,14 @@ class authController {
   async login(req, res, next) {
     const infor = await User.findOne({
       where: {
-        username: req.body.username,
-        password: req.body.password,
+        email: req.body.email,
       },
     });
     if (infor !== null) {
       const token = createToken(infor.id);
       res.cookie("jwt", token, { httpOnly: true });
       res.cookie("role", infor.role, { httpOnly: true });
+      infor.dataValues.accessToken = token
       res.send(infor);
     } else {
       res.send("Login failed");
@@ -50,7 +50,8 @@ class authController {
         const token = createToken(newUser.id);
         res.cookie("jwt", token, { httpOnly: true });
         res.cookie("role", newUser.role, { httpOnly: true });
-        res.send("Register success" + newUser.id);
+        newUser.dataValues.accessToken = token
+        res.send(newUser);
       } else {
         res.send("Register failed");
       }

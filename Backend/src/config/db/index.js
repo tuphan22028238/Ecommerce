@@ -9,7 +9,7 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST || "localhost",
     dialect: process.env.DB_DIALECT || "mysql",
 
-    port: process.env.DB_PORT || 3306, // MySQL mặc định là port 3306, nếu bạn sử dụng port khác thì điền vào
+    port: process.env.DB_PORT || 3307, // MySQL mặc định là port 3306, nếu bạn sử dụng port khác thì điền vào
     logging: false,
     // query: {
     //   raw: true, // If you want to return raw results

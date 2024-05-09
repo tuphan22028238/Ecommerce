@@ -21,3 +21,12 @@ export const getProfileFromLS = () => {
 export const setProfileToLS = (profile: User) => {
   localStorage.setItem("profile", JSON.stringify(profile))
 }
+
+export const getRoleFromLS = () => {
+  const res = localStorage.getItem("role")
+  return res ? res : ''
+}
+
+export const setRoleToLS = (role : string) => {
+  localStorage.setItem("role", role)
+}

@@ -1,16 +1,14 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { toast } from "react-toastify";
-import { AuthResponse } from "types/auth.type";
-import { clearLS, getAccessTokenFromLS, setAccessTokenToLS, setProfileToLS } from "./auth";
-
-
-
+import { clearLS, getAccessTokenFromLS, getRoleFromLS, setAccessTokenToLS, setProfileToLS, setRoleToLS } from "./auth";
 
 class Http {
   instance: AxiosInstance
   private accessToken: string;
+  private role: string;
   constructor() {
     this.accessToken = getAccessTokenFromLS()  // get token from local storage using Ram instead of Disk be cause in class
+    this.role = getRoleFromLS()
     this.instance = axios.create({
       baseURL: 'http://localhost:8000', // need a api url
       timeout: 10000,
@@ -21,8 +19,10 @@ class Http {
 
     this.instance.interceptors.request.use(
       (config) => {
+        
       if(this.accessToken && config.headers) {
-        config.headers.authorization = this.accessToken
+        config.headers.Authorization = this.accessToken
+        config.headers.Role = this.role
         return config
       }
       return config
@@ -33,14 +33,22 @@ class Http {
 
     this.instance.interceptors.response.use(
        (response) => {
-        console.log(response)
+
+        console.log(response);
+        
         const {url} = response.config
-        if(url === '/login' || url === '/register') {
-          this.accessToken = (response.data as AuthResponse).data.access_token
-          setAccessTokenToLS(this.accessToken)
-          setProfileToLS((response.data as AuthResponse).data.user)
+        if(url === '/auth/login' || url === '/auth/register') {
+          try {
+            this.accessToken = response.data.accessToken
+            this.role = response.data.role
+            setAccessTokenToLS(this.accessToken)
+            setProfileToLS(response.data.id)    
+            setRoleToLS(this.role)  
+          } catch (error) {
+            console.log(error)
+          }      
         }
-        else if (url === '/logout') {
+        else if (url === '/auth/logout') {
           this.accessToken = ''
           clearLS()
         }

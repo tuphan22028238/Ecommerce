@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+const User = require("../models/User");
 
 function protect(req, res, next) {
-  const token = req.cookies.jwt;
+  const token = req.headers['authorization'] || req.cookies.jwt;
   if (token) {
     jwt.verify(token, "MarketSwift", async (err, decoded) => {
       if (err) {
@@ -19,8 +19,8 @@ function protect(req, res, next) {
 }
 
 function checkRole(req, res, next) {
-  const role = req.cookies.role;
-  if (role == 0) {
+  const role = req.headers['role']
+  if (role == 2) {
     next();
   } else {
     res.send("You are not seller");

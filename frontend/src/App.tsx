@@ -1,5 +1,6 @@
-import { ToastContainer } from "react-toastify"
+import { ToastContainer, toast } from "react-toastify"
 import useRouteElements from "./useRouteElements"
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
