@@ -3,6 +3,7 @@ const sequelize = require("../../config/db/index");
 
 class ImageProduct extends Model {}
 
+
 ImageProduct.init(
   {
     id: {

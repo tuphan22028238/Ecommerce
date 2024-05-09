@@ -5,6 +5,7 @@ const Product = require("./Product");
 
 class Review extends Model {}
 
+
 Review.init(
   {
     reviewId: {
