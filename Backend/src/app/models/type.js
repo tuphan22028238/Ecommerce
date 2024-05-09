@@ -21,7 +21,7 @@ Type.init(
     sizeFrom: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      field: "size_from",
+      field: "size_form",
     },
     sizeTo: {
       type: DataTypes.INTEGER,
