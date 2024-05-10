@@ -2,7 +2,7 @@ const User = require("../models/User");
 const Product = require("../models/Product");
 const PossesProduct = require("../models/PossesProduct");
 const Order = require("../models/Orders");
-const OrderDetail = require("../models/ordersDetail");
+const OrderDetail = require("../models/OrdersDetail");
 const Type = require("../models/Type");
 const ImageProduct = require("../models/ImageProduct");
 const Cart = require("../models/Cart");
@@ -11,7 +11,7 @@ class UserController {
 
   async viewProfile(req, res, next) {
     try {
-      const profile = await User.findOne({where : {id : req.params.id}});
+      const profile = await User.findOne({ where: { id: req.params.id } });
       res.send(profile);
     } catch (error) {
       console.error("Error getting profile:", error.message);
