@@ -9,7 +9,7 @@ export interface Product {
   category: string
   createdAt: string
   updatedAt: string
-  idSeller: number
+  sellerId: number
   typeId: number
 }
 
