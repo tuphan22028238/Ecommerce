@@ -12,6 +12,7 @@ import { useContext } from "react"
 import { AppContext } from "./context/app.context"
 import path from "./ultis/path"
 import Cart from "./pages/Cart/Cart"
+import PossesProductList from "./pages/PossesProductList"
 function ProtectedRoute() {
   const {isAuthenticated} = useContext(AppContext)
   return isAuthenticated ? <Outlet/> : <Navigate to='/login' />
@@ -77,7 +78,7 @@ export default function useRouteElements() {
       path: path.seller.list_product,
       element: (
         <MainLayout>
-          <PossesProduct />
+          <PossesProductList/>
         </MainLayout>
       )
     },
