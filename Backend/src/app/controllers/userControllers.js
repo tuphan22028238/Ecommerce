@@ -1,10 +1,7 @@
 const User = require("../models/User");
 const Product = require("../models/Product");
-const PossesProduct = require("../models/PossesProduct");
 const Order = require("../models/Orders");
 const OrderDetail = require("../models/OrdersDetail");
-const Type = require("../models/Type");
-const ImageProduct = require("../models/ImageProduct");
 const Cart = require("../models/Cart");
 
 class UserController {
@@ -293,7 +290,7 @@ class UserController {
       const product = await Product.findOne({ where: { id: item.productId } });
       if (product) {
         product.unitInStock -= item.quantity;
-        product.sold += item.quantity;
+        product.quantitySold += item.quantity;
         await product.save();
       }
     }
