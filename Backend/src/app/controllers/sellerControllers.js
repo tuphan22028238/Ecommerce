@@ -1,20 +1,21 @@
 const User = require("../models/User");
-const PossesProduct = require("../models/PossesProduct");
 const Product = require("../models/Product");
 const Order = require("../models/Orders");
-const OrderDetail = require("../models/ordersDetail");
+const OrderDetail = require("../models/OrdersDetail");
 const ImageProduct = require("../models/ImageProduct");
-const Cart = require("../models/cart");
+const Cart = require("../models/Cart");
 
 class SellerController {
   async viewListProduct(req, res, next) {
     try {
       let listProduct = []
-      const myProduct = await PossesProduct.findAll({ where: { userId: req.params.id } });
-      for (let i = 0; i < myProduct.length; i++) {
-        const product = await Product.findOne({ where: { id: myProduct[i].dataValues.productId } });
-        listProduct.push(product);
-      }
+      // const myProduct = await PossesProduct.findAll({ where: { userId: req.params.id } });
+      // for (let i = 0; i < myProduct.length; i++) {
+      //   const product = await Product.findOne({ where: { id: myProduct[i].dataValues.productId } });
+      //   listProduct.push(product);
+      // }
+      const myProduct = Product.findAll({ where: { idSeller: req.params.id } });
+      listProduct.push(myProduct);
       res.send(listProduct);
     }
     catch (errors) {
@@ -26,10 +27,10 @@ class SellerController {
   async addProduct(req, res, next) {
     try {
       const product = await Product.create(req.body);
-      const possesProduct = await PossesProduct.create({
-        userId: req.body.idSeller,
-        productId: product.id
-      });
+      // const possesProduct = await PossesProduct.create({
+      //   userId: req.body.idSeller,
+      //   productId: product.id
+      // });
 
       res.send(product);
     }
@@ -49,11 +50,11 @@ class SellerController {
         });
       });
 
-      await PossesProduct.findAll({ where: { productId: product.id } }).then(possesProducts => {
-        possesProducts.forEach(possesProduct => {
-          possesProduct.destroy();
-        });
-      });
+      // await PossesProduct.findAll({ where: { productId: product.id } }).then(possesProducts => {
+      //   possesProducts.forEach(possesProduct => {
+      //     possesProduct.destroy();
+      //   });
+      // });
 
       await Cart.findAll({ where: { productId: product.id } }).then(carts => {
         carts.forEach(cart => {
@@ -98,6 +99,102 @@ class SellerController {
     catch (errors) {
       console.error("Error edit product:", errors.message);
       res.status(400).send("Error edit product");
+    }
+  }
+  //-------------------------------------------------------------------------------------------------//
+  // View list product being ordered
+  async viewListProductOrder(req, res, next) {
+    try {
+      let listProduct = []
+      const myProduct = await Product.findAll({ where: { idSeller: req.params.id } });
+      for (let i = 0; i < myProduct.length; i++) {
+        const product = await OrderDetail.findAll({ where: { productId: myProduct[i].dataValues.id } });
+        listProduct.push(product);
+      }
+      res.send(listProduct);
+    }
+    catch (errors) {
+      console.error("Error viewing product:", errors.message);
+      res.status(400).send("Error viewing product");
+    }
+  }
+
+  // Redirect to order detail by product id
+  async viewOrderDetail(req, res, next) {
+    try {
+      const orderDetail = await OrderDetail.findOne({ where: { productId: req.params.id } });
+      res.send(orderDetail);
+    }
+    catch (errors) {
+      console.error("Error viewing order detail:", errors.message);
+      res.status(400).send("Error viewing order detail");
+    }
+  }
+
+  // Confirm order
+  async confirmOrder(req, res, next) {
+    try {
+      const order = await Order.findOne({ where: { userId: req.params.id } });
+      await order.update({ status: 1 });
+
+      res.send(order);
+    }
+    catch (errors) {
+      console.error("Error confirming order:", errors.message);
+      res.status(400).send("Error confirming order");
+    }
+  }
+
+  // View customers who are currently shopping
+  async viewActiveCustomers(req, res, next) {
+    try {
+      const activeOrders = await Order.findAll({ where: { status: 1 } });
+
+      const customerIds = [...new Set(activeOrders.map(order => order.userId))];
+
+      const activeCustomers = [];
+      for (let id of customerIds) {
+        const customer = await User.findOne({ where: { id: id } });
+        activeCustomers.push(customer);
+      }
+
+      res.status(200).json(activeCustomers);
+    } catch (error) {
+      console.error("Error viewing active customers:", error.message);
+      res.status(500).json({
+        message: "Error viewing active customers",
+        error: error.message
+      });
+    }
+  }
+
+  // View customer's purchased items and their details
+  async viewCustomerPurchases(req, res, next) {
+    try {
+      const customerId = req.params.customerId;
+
+      const orders = await Order.findAll({ where: { userId: customerId } });
+
+      const customerPurchases = [];
+      for (let order of orders) {
+        const orderDetails = await OrderDetail.findAll({ where: { orderId: order.id } });
+        for (let detail of orderDetails) {
+          const product = await Product.findOne({ where: { id: detail.productId } });
+          customerPurchases.push({
+            order: order,
+            orderDetail: detail,
+            product: product
+          });
+        }
+      }
+
+      res.status(200).json(customerPurchases);
+    } catch (error) {
+      console.error("Error viewing customer's purchases:", error.message);
+      res.status(500).json({
+        message: "Error viewing customer's purchases",
+        error: error.message
+      });
     }
   }
 }
