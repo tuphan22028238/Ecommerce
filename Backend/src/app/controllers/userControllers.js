@@ -157,50 +157,100 @@ class UserController {
   }
   //-----------------------------------Handle Orders-----------------------------------------------------//
 
-  // Checkout
-  async checkOut(req, res, next) {
+  // Checkout order
+  async checkOutOrder(req, res, next) {
     try {
       const userId = req.params.id;
-      let cartItems = await this.getCartItems(userId);
+      let cartItems = await this.getCartSelectedItems(req, res, next);
 
       if (cartItems.length > 0) {
-        this.displayOrderSummary(cartItems);
+        const orderSummary = this.displayOrderSummary(cartItems);
 
-        const paymentInfo = await this.collectPaymentInfo(req);
+        const paymentInfo = await this.collectPaymentInfo(req, res, next);
 
-        await this.placeOrder(paymentInfo, cartItems);
+        const order = await this.placeOrder(paymentInfo, cartItems, userId);
 
-        res.status(200).send("Order placed and paid successfully");
+        res.status(200).json({
+          message: "Order placed and paid successfully",
+          orderSummary: orderSummary,
+          order: order
+        });
       } else {
-        res.status(200).send("No items selected for checkout");
+        res.status(200).json({
+          message: "No items selected for checkout"
+        });
       }
     } catch (error) {
       console.error("Error during checkout:", error.message);
-      res.status(200).send("Error during checkout");
+      res.status(500).json({
+        message: "Error during checkout",
+        error: error.message
+      });
     }
   }
 
-  // Get cart items
-  async getCartItems(userId) {
-    const cartItems = await Cart.findAll({ where: { userId } });
-    const selectedItems = req.body.selectedItems; // Array of selected item
-    cartItems = cartItems.filter(item => selectedItems.includes(item.id));
-    return cartItems;
+  // Get cart items selected by user
+  async getCartSelectedItems(req, res, next) {
+    try {
+      const userId = req.params.userId;
+      const selectedItems = req.query.selectedItems ? req.query.selectedItems.split(',') : []; // Array of selected item ids from query params
+      let cartItems = await Cart.findAll({ where: { userId } });
+      cartItems = cartItems.filter(item => selectedItems.length === 0 || selectedItems.includes(item.id.toString()));
+      res.status(200).json(cartItems);
+    } catch (error) {
+      console.error("Error getting cart items:", error.message);
+      res.status(500).json({
+        message: "Error getting cart items",
+        error: error.message
+      });
+    }
   }
 
   // Display order summary
-  displayOrderSummary(cartItems) {
-    console.log("Order Summary:");
-    cartItems.forEach(item => {
-      console.log(`Product: ${item.name}, Price: ${item.price}, Quantity: ${item.quantity}`);
-    });
+  async displayOrderSummary(req, res, next) {
+    try {
+      const userId = req.params.userId;
+      let cartItems = await this.getCartItems(userId);
+      let orderSummary = {
+        totalItems: 0,
+        totalPrice: 0,
+        items: []
+      };
+
+      cartItems.forEach(item => {
+        const total = item.price * item.quantity;
+        orderSummary.items.push({
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          total: total
+        });
+        orderSummary.totalItems += item.quantity;
+        orderSummary.totalPrice += total;
+      });
+
+      res.status(200).json(orderSummary);
+    } catch (error) {
+      console.error("Error getting order summary:", error.message);
+      res.status(500).json({
+        message: "Error getting order summary",
+        error: error.message
+      });
+    }
   }
 
-  // Collect payment info
-  async collectPaymentInfo(req) {
-    const { address, paymentMode } = req.body;
-    const paymentInfo = { address, paymentMode };
-    return paymentInfo;
+  async collectPaymentInfo(req, res, next) {
+    try {
+      const { address, paymentMode } = req.body;
+      const paymentInfo = { address, paymentMode };
+      res.status(200).json(paymentInfo);
+    } catch (error) {
+      console.error("Error collecting payment info:", error.message);
+      res.status(500).json({
+        message: "Error collecting payment info",
+        error: error.message
+      });
+    }
   }
 
   // Place order
@@ -222,7 +272,7 @@ class UserController {
       id_user: userId
     };
 
-    await Order.create(order);
+    const createdOrder = await Order.create(order);
 
     // Create order details
     for (const item of cartItems) {
@@ -247,6 +297,8 @@ class UserController {
         await product.save();
       }
     }
+
+    return createdOrder;
   }
 
   // Get order summary for latest orders
