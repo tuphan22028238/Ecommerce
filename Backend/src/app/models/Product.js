@@ -73,6 +73,16 @@ Product.init(
             allowNull: true,
             field: "id_seller",
         },
+        quantitySold: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            field: `sold`,
+        },
+        imageProduct: {
+            type: DataTypes.STRING(4000),
+            allowNull: true,
+            field: 'image'
+        }
     },
     {
         sequelize,

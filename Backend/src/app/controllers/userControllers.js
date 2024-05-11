@@ -128,7 +128,6 @@ class UserController {
   // Add cart to order
   async addCartToOrder(req, res, next) {
     try {
-      const { productId, quantity, color, discount } = req.body;
       const userId = req.params.id;
 
       // Find the user's cart
@@ -265,6 +264,14 @@ class UserController {
       order.paymentDate = new Date();
       await order.save();
 
+      // Update product quantitySold and unitInStock
+      const product = await Product.findOne({
+        where: { id: order.productId },
+      });
+      product.quantitySold += order.quantity; // Assuming order quantity is stored in order.quantity
+      product.unitInStock -= order.quantity;
+      await product.save();
+
       // Send success response
       res.send("Order paid successfully");
     } catch (error) {
@@ -284,6 +291,13 @@ class UserController {
       // Update order status
       order.status = 2;
       await order.save();
+
+      // Update product unitInStock
+      const product = await Product.findOne({
+        where: { id: order.productId },
+      });
+      product.unitInStock += order.quantity; // Adding back the cancelled quantity to stock
+      await product.save();
 
       // Send success response
       res.send("Order cancelled successfully");
@@ -305,6 +319,14 @@ class UserController {
       order.status = 6;
       await order.save();
 
+      // Update product quantitySold and unitInStock
+      const product = await Product.findOne({
+        where: { id: order.productId },
+      });
+      product.quantitySold -= order.quantity; // Subtracting back the returned quantity from sold count
+      product.unitInStock += order.quantity; // Adding back the returned quantity to stock
+      await product.save();
+
       // Send success response
       res.send("Order returned successfully");
     } catch (error) {
@@ -324,6 +346,13 @@ class UserController {
       // Update order status
       order.status = 5;
       await order.save();
+
+      // Update product quantitySold
+      const product = await Product.findOne({
+        where: { id: order.productId },
+      });
+      product.quantitySold -= order.quantity; // Subtracting back the refunded quantity from sold count
+      await product.save();
 
       // Send success response
       res.send("Order refunded successfully");

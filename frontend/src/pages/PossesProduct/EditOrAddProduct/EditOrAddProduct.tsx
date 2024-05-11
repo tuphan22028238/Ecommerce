@@ -19,7 +19,7 @@ const intialFormState: FormStateType = {
   category: '',
   createdAt: '',
   updatedAt: '',
-  idSeller: 0,
+  sellerId: 0,
   typeId: 0
 }
 
@@ -60,7 +60,7 @@ export default function EditOrAddProduct() {
 
   const handleSubmnit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    formState.idSeller = Number(getProfileFromLS())
+    formState.sellerId = Number(getProfileFromLS())
 
     if (isAddMode) {
       addProductMutation.mutate(formState)
