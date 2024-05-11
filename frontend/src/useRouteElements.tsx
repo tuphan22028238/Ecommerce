@@ -11,6 +11,7 @@ import { Navigate, Outlet, useRoutes } from "react-router-dom"
 import { useContext } from "react"
 import { AppContext } from "./context/app.context"
 import path from "./ultis/path"
+import OrderCheckOut from "./pages/OrderCheckOut"
 function ProtectedRoute() {
   const {isAuthenticated} = useContext(AppContext)
   return isAuthenticated ? <Outlet/> : <Navigate to='/login' />
@@ -93,6 +94,14 @@ export default function useRouteElements() {
       element: (
         <MainLayout>
           <EditOrAddProduct />
+        </MainLayout>
+      )
+    },
+    {
+      path: path.order_checkout,
+      element: (
+        <MainLayout>
+          <OrderCheckOut/>
         </MainLayout>
       )
     }
