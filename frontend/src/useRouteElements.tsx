@@ -5,12 +5,14 @@ import Login from "./pages/Login"
 import ProductList from "./pages/ProductList"
 import Register from "./pages/Register"
 import ProductDetail from "./pages/ProductDetail"
-import PossesProduct from "./pages/PossesProduct"
+import PossesProduct from "./pages/PossesProduct/PossesProduct"
 import EditOrAddProduct from "./pages/PossesProduct/EditOrAddProduct"
 import { Navigate, Outlet, useRoutes } from "react-router-dom"
 import { useContext } from "react"
 import { AppContext } from "./context/app.context"
 import path from "./ultis/path"
+import Cart from "./pages/Cart/Cart"
+import PossesProductList from "./pages/PossesProductList"
 import OrderCheckOut from "./pages/OrderCheckOut"
 function ProtectedRoute() {
   const {isAuthenticated} = useContext(AppContext)
@@ -77,7 +79,7 @@ export default function useRouteElements() {
       path: path.seller.list_product,
       element: (
         <MainLayout>
-          <PossesProduct />
+          <PossesProductList/>
         </MainLayout>
       )
     },
@@ -98,6 +100,14 @@ export default function useRouteElements() {
       )
     },
     {
+      path: path.cart,
+      element: (
+        <MainLayout>
+          <Cart/>
+        </MainLayout>
+      )
+    },
+    {
       path: path.order_checkout,
       element: (
         <MainLayout>
@@ -105,7 +115,6 @@ export default function useRouteElements() {
         </MainLayout>
       )
     }
-    
   ])
   return routerElements
 }
