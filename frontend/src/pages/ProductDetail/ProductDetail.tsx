@@ -1,11 +1,12 @@
 import {useQuery, } from "@tanstack/react-query"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { getProduct } from "../../apis/products.api"
 
 import { formatCurrency, formatNumberToSocialStyle, rateSale } from '../../ultis/utils'
 import InputNumber from '../../components/InputNumber'
 import { useEffect, useMemo, useState } from 'react'
 import { Product } from 'types/product.type'
+import path from "../../ultis/path"
 
 export default function ProductDetail() {
   const { id } = useParams()
@@ -157,7 +158,7 @@ export default function ProductDetail() {
                 </div>
               </div>
               <div className='mt-8 flex items-center'>
-                <button className='flex h-12 items-center justify-center rounded-sm border-2 border-blue-600 bg-blue-300 px-5 capitalize text-black shadow-sm hover:bg-blue-100'>
+                <Link to={path.cart} className='flex h-12 items-center justify-center rounded-sm border-2 border-blue-600 bg-blue-300 px-5 capitalize text-black shadow-sm hover:bg-blue-100'>
                   <svg
                     enableBackground='new 0 0 15 15'
                     viewBox='0 0 15 15'
@@ -182,7 +183,7 @@ export default function ProductDetail() {
                     </g>
                   </svg>
                   Thêm vào giỏ hàng
-                </button>
+                </Link>
 
                 <button className='ml-16 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-blue-700 capitalize text-white shadow-sm outline-none hover:bg-blue-700/80'>
                   Mua ngay
