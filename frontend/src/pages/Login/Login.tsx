@@ -8,7 +8,7 @@ import Input from "../../components/Input";
 import { login } from "../../apis/auth.api";
 import { isAxiosUnprocessableEntity } from "../../ultis/utils";
 import { ErrorResponse } from "types/utils.type";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "../../context/app.context";
 import Button from "../../components/Button";
 type FormData = Omit<Schema,'confirm_password'>
@@ -18,6 +18,7 @@ type FormData = Omit<Schema,'confirm_password'>
 export default function Login() {
 
   const {setIsAuthenticated, setProfile} = useContext(AppContext)
+  const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
   const {register,
         setError, 
@@ -42,6 +43,9 @@ export default function Login() {
         navigate('/')
       },
       onError: (error) => {
+        
+        setErrorMessage(error.response?.data)
+        
         if (isAxiosUnprocessableEntity<ErrorResponse<FormData>>(error)) {
             const formError = error.response?.data.data
 
@@ -74,7 +78,7 @@ export default function Login() {
               register={register}
               type="email"
               className="mt-8"
-              errorMessage={errors.email?.message}
+              errorMessage={errors.email?.message || errorMessage}
               placeholder="Email"
               />
               <Input
@@ -82,7 +86,7 @@ export default function Login() {
               register={register}
               type="password"
               className="mt-3"
-              errorMessage={errors.password?.message}
+              errorMessage={errors.password?.message || errorMessage}
               placeholder="Password"
               
               

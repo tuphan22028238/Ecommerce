@@ -26,6 +26,7 @@ class authController {
     const infor = await User.findOne({
       where: {
         email: req.body.email,
+        password: req.body.password,
       },
     });
     if (infor !== null) {
@@ -35,7 +36,7 @@ class authController {
       infor.dataValues.accessToken = token
       res.send(infor);
     } else {
-      res.send("Login failed");
+      res.status(400).send("The email or password is incorrect");
     }
   }
   async register(req, res, next) {
