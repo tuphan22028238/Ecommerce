@@ -108,4 +108,4 @@ class SellerController {
   }
 }
 
-module.exports = new SellerController();
+module.exports = new SellerController;
