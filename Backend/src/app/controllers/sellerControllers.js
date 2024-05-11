@@ -135,12 +135,19 @@ class SellerController {
   // Confirm order
   async confirmOrder(req, res, next) {
     try {
-      const order = await Order.findOne({ where: { userId: req.params.id } });
-      await order.update({ status: 1 });
+      const orderDetailId = req.params.id;
+      const sellerId = req.params.sellerId;
+      const orderDetail = await OrderDetail.findOne({ where: { id: orderDetailId, sellerId: sellerId } });
 
-      res.send(order);
-    }
-    catch (errors) {
+      if (!orderDetail) {
+        res.status(404).send("Order detail not found or you do not have permission to confirm this order");
+        return;
+      }
+
+      await orderDetail.update({ status: 1 });
+
+      res.send(orderDetail);
+    } catch (errors) {
       console.error("Error confirming order:", errors.message);
       res.status(400).send("Error confirming order");
     }
@@ -159,10 +166,10 @@ class SellerController {
         activeCustomers.push(customer);
       }
 
-      res.status(200).json(activeCustomers);
+      res.status(200).send(activeCustomers);
     } catch (error) {
       console.error("Error viewing active customers:", error.message);
-      res.status(500).json({
+      res.status(500).send({
         message: "Error viewing active customers",
         error: error.message
       });
@@ -172,7 +179,7 @@ class SellerController {
   // View customer's purchased items and their details
   async viewCustomerPurchases(req, res, next) {
     try {
-      const customerId = req.params.customerId;
+      const customerId = req.params.id;
 
       const orders = await Order.findAll({ where: { userId: customerId } });
 
@@ -189,15 +196,49 @@ class SellerController {
         }
       }
 
-      res.status(200).json(customerPurchases);
+      res.status(200).send(customerPurchases);
     } catch (error) {
       console.error("Error viewing customer's purchases:", error.message);
-      res.status(500).json({
+      res.status(500).send({
         message: "Error viewing customer's purchases",
         error: error.message
       });
     }
   }
+  // View customer's purchased items and their details
+  // async viewCustomerPurchases(req, res, next) {
+  //   try {
+  //     const customerId = req.params.customerId;
+  //     const page = req.query.page ? parseInt(req.query.page) : 1;
+  //     const itemsPerPage = req.query.itemsPerPage ? parseInt(req.query.itemsPerPage) : 10;
+
+  //     // Calculate the offset into the list of orders
+  //     const offset = (page - 1) * itemsPerPage;
+
+  //     const orders = await Order.findAll({ where: { userId: customerId }, limit: itemsPerPage, offset: offset });
+
+  //     const customerPurchases = [];
+  //     for (let order of orders) {
+  //       const orderDetails = await OrderDetail.findAll({ where: { orderId: order.id } });
+  //       for (let detail of orderDetails) {
+  //         const product = await Product.findOne({ where: { id: detail.productId } });
+  //         customerPurchases.push({
+  //           order: order,
+  //           orderDetail: detail,
+  //           product: product
+  //         });
+  //       }
+  //     }
+
+  //     res.status(200).send(customerPurchases);
+  //   } catch (error) {
+  //     console.error("Error viewing customer's purchases:", error.message);
+  //     res.status(500).send({
+  //       message: "Error viewing customer's purchases",
+  //       error: error.message
+  //     });
+  //   }
+  // }
 }
 
 module.exports = new SellerController;
