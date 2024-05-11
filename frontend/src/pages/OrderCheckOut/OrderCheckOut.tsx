@@ -8,24 +8,24 @@ export default function OrderCheckOut() {
             <div className="container">
                 <h1 className="py-5 text-2xl text-black-900 capitalize">xác nhận đơn hàng</h1>
                 <div className="overflow-auto">
-                    <div className="min-w-[1000px]">
-                        <div className="grid grid-cols-12 rounded-sm bg-white py-5 px-9 text-sm capitalize text-gray-500 shadow">
-                            <div className="col-span-8">
-                                <div className="flex items-center">
-                                    <div className="flex-grow text-black">
-                                        Sản phẩm
+                    <div className="min-w-[1000px]">                
+                        <div className="my-3 rounded-sm bg-white p-5 shadow">
+                            <div className="grid grid-cols-12 rounded-sm bg-white py-5 px-9 text-sm capitalize text-gray-500">
+                                <div className="col-span-8">
+                                    <div className="flex items-center">
+                                        <div className="flex-grow text-black">
+                                            Sản phẩm
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-span-4">
+                                    <div className="grid text-center grid-cols-3">
+                                        <div className="col-span-1 text-center">Đơn giá</div>
+                                        <div className="col-span-1 text-center">Số lượng</div>
+                                        <div className="col-span-1 text-center">Số tiền</div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-span-4">
-                                <div className="grid text-center grid-cols-3">
-                                    <div className="col-span-1">Đơn giá</div>
-                                    <div className="col-span-1">Số lượng</div>
-                                    <div className="col-span-1">Số tiền</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="my-3 rounded-sm bg-white p-5 shadow">
                             <div className="grid grid-cols-12 text-center rounded-sm border border-gray bg-white py-5 px-4 text-sm text-gray-500">
                                 <div className="col-span-8">
                                     <div className="flex">
@@ -39,9 +39,9 @@ export default function OrderCheckOut() {
                                 </div>
                                 <div className="col-span-4">
                                     <div className="grid text-center grid-cols-3">
-                                        <div className="col-span-1">66.666đ</div>
-                                        <div className="col-span-1">12</div>
-                                        <div className="col-span-1">đơn giá x số lượng</div>
+                                        <div className="col-span-1 text-center">66.666đ</div>
+                                        <div className="col-span-1 text-center">12</div>
+                                        <div className="col-span-1 text-center">đơn giá x số lượng</div>
                                     </div>
                                 </div>
                             </div>
