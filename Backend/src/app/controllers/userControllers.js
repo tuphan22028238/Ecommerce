@@ -152,13 +152,29 @@ class UserController {
       res.status(400).send("Error updating product in cart");
     }
   }
+  // Get product details
+  async getProductDetails(req, res, next) {
+    try {
+      const productId = req.params.id;
+      const product = await Product.findOne({ where: { id: productId } });
+
+      if (product) {
+        res.send(product);
+      } else {
+        res.status(404).send("Product not found");
+      }
+    } catch (error) {
+      console.error("Error getting product details:", error.message);
+      res.status(500).send("Error getting product details");
+    }
+  }
   //-----------------------------------Handle Orders-----------------------------------------------------//
 
   // Checkout order
   async checkOutOrder(req, res, next) {
     try {
       const userId = req.params.id;
-      let cartItems = await this.getCartSelectedItems(req, res, next);
+      let cartItems = await this.getSelectedItemsFromCart(req, res, next);
 
       if (cartItems.length > 0) {
         const orderSummary = this.displayOrderSummary(cartItems);
@@ -207,7 +223,7 @@ class UserController {
   async displayOrderSummary(req, res, next) {
     try {
       const userId = req.params.id;
-      let cartItems = await this.getCartItems(userId);
+      let cartItems = await this.getSelectedItemsFromCart(userId);
       let orderSummary = {
         totalItems: 0,
         totalPrice: 0,
@@ -215,14 +231,14 @@ class UserController {
       };
 
       cartItems.forEach(item => {
-        const total = item.price * item.quantity;
+        const totalCostForItem = item.price * item.quantity;
         orderSummary.items.push({
           name: item.name,
           price: item.price,
           quantity: item.quantity,
-          total: total
+          total: totalCostForItem
         });
-        orderSummary.totalItems += item.quantity;
+        orderSummary.totalItems += item;
         orderSummary.totalPrice += total;
       });
 
@@ -317,6 +333,7 @@ class UserController {
             const itemSummary = {
               productId: product.id,
               productName: product.name,
+              image: product.image,
               quantity: orderDetail.quantity,
               unitPrice: orderDetail.unitPrice,
               color: orderDetail.color,
