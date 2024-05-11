@@ -8,9 +8,9 @@ route.post("/cart/add", userController.addToCart);
 route.post("/cart/delete", userController.deleteFromCart);
 route.put("/cart/update", userController.updateCart);
 
-route.post("/cart/checkout/:userId", userController.placeOrder);
+route.post("/cart/checkout/:id", userController.placeOrder);
 route.get('/cart/:userId', userController.getCartSelectedItems);
-route.get('/order-summary/:userId', userController.displayOrderSummary);
+route.get('/order-summary/:id', userController.displayOrderSummary);
 route.post('/payment-info', userController.collectPaymentInfo);
 
 module.exports = route;
