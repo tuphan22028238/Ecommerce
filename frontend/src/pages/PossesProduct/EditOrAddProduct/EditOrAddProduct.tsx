@@ -84,13 +84,14 @@ export default function EditOrAddProduct() {
 
   return (
     
-<div className="bg-gray-200 items-center justify-center">
+<div className="bg-gray-200 items-center justify-center ">
+<div className="container rounded py-3 bg-white max-w-[600px]">
 <form className="max-w-sm mx-auto" onSubmit={handleSubmnit}>
   
   <div className="mb-5">
     <label htmlFor="id" className="block mb-2 text-sm font-medium text-black">ID Product</label>
     <input id="id" 
-    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" 
+    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lgblock w-full p-2.5" 
     placeholder="name@flowbite.com" 
     value= { formState.id }
     onChange={handleChange('id')}
@@ -99,7 +100,7 @@ export default function EditOrAddProduct() {
   <div className="mb-5">
     <label htmlFor="name" className="block mb-2 text-sm font-medium text-black">Name</label>
     <input id="name" 
-    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded w-full p-2.5"
     value={ formState.name }
     onChange={handleChange('name')}
     required />
@@ -107,7 +108,7 @@ export default function EditOrAddProduct() {
   <div className="mb-5">
     <label htmlFor="price" className="block mb-2 text-sm font-medium text-black">Price</label>
     <input id="price" 
-    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded w-full p-2.5"
     value={ formState.price }
     onChange={handleChange('price')}
     required />
@@ -115,7 +116,7 @@ export default function EditOrAddProduct() {
   {isAddMode && <div className="mb-5">
     <label htmlFor="unitInStock" className="block mb-2 text-sm font-medium text-black">Unit</label>
     <input id="unitInStock" 
-    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded w-full p-2.5"
     value={ formState.unitInStock }
     onChange={handleChange('unitInStock')}
     required />
@@ -124,7 +125,7 @@ export default function EditOrAddProduct() {
   <div className="mb-5">
   <label htmlFor="Type" className="block mb-2 text-sm font-medium text-black">Type</label>
   <input id="Type" 
-  className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+  className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded w-full p-2.5"
   value={ formState.typeId }
   onChange={handleChange('typeId')}
   required />
@@ -133,15 +134,21 @@ export default function EditOrAddProduct() {
   <div className="mb-5">
     <label htmlFor="des" className="block mb-2 text-sm font-medium text-black">Description</label>
     <input id="des" 
-    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+    className="shadow-sm bg-gray-50 border border-gray-300 rounded block w-full p-2.5"
     value={ formState.description }
     onChange={handleChange('description')}
     required />
   </div>
-  <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+  <button type="submit" className="flex focus:ring-4 focus:outline-none  font-medium rounded text-sm px-5 py-2.5 text-center text-black bg-gray-400 items-center justify-center ">
+    
     {isAddMode ? 'Add' : 'Edit'}
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+</svg>
+
   </button>
 </form>
+</div>
 </div>
   )
   
