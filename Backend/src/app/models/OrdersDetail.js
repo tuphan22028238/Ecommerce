@@ -37,6 +37,12 @@ OrderDetail.init(
       allowNull: false,
       field: "id_orders",
     },
+    status: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 0,
+      comment: "0: Not confirm, 1: Confirm, 2: Shipped, 3: Cancelled",
+    },
   },
   {
     sequelize,

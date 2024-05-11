@@ -74,6 +74,7 @@ CREATE TABLE `orders_detail` (
     `id_product` INT(11) NOT NULL,
     `id_orders` INT(11) NOT NULL,
     `size` INT(11),
+    `status` TINYINT(4) NOT NULL DEFAULT '1' COMMENT '0: Not confirm - 1: Confirmed - 2: Cancelled - 3: Shipped',
     INDEX `id_product` (`id_product`),
     INDEX `id_orders` (`id_orders`),
     FOREIGN KEY (`id_product`)

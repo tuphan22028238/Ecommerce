@@ -406,6 +406,25 @@ class UserController {
       res.status(400).send("Error viewing order history");
     }
   }
+  // View order status
+  async viewOrderStatus(req, res, next) {
+    try {
+      const orderId = req.params.id;
+      const userId = req.params.userId;
+
+      const orderDetails = await OrderDetail.findAll({ where: { orderId: orderId, userId: userId } });
+
+      if (!orderDetails) {
+        res.status(404).send("Order not found or you do not have permission to view this order");
+        return;
+      }
+
+      res.send(orderDetails);
+    } catch (errors) {
+      console.error("Error viewing order status:", errors.message);
+      res.status(400).send("Error viewing order status");
+    }
+  }
   //-----------------------------------End-----------------------------------------------------//
 }
 
