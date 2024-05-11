@@ -2,9 +2,9 @@ const User = require("../models/User");
 const PossesProduct = require("../models/PossesProduct");
 const Product = require("../models/Product");
 const Order = require("../models/Orders");
-const OrderDetail = require("../models/ordersDetail");
+const OrderDetail = require("../models/OrdersDetail");
 const ImageProduct = require("../models/ImageProduct");
-const Cart = require("../models/cart");
+const Cart = require("../models/Cart");
 
 class SellerController {
   async viewListProduct(req, res, next) {
@@ -25,9 +25,10 @@ class SellerController {
 
   async addProduct(req, res, next) {
     try {
+      console.log(req.body);
       const product = await Product.create(req.body);
       const possesProduct = await PossesProduct.create({
-        userId: req.body.idSeller,
+        userId: req.body.sellerId,
         productId: product.id
       });
 
