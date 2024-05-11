@@ -9,8 +9,8 @@ export interface Product {
   category: string
   createdAt: string
   updatedAt: string
-  sellerId: number
   typeId: number
+  sellerId: number
 }
 
 export interface ProductList {
