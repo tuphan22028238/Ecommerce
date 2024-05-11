@@ -171,22 +171,86 @@ class UserController {
   //-----------------------------------Handle Orders-----------------------------------------------------//
 
   // Checkout order
-  async checkOutOrder(req, res, next) {
+  async checkOutOrderFromCart(req, res, next) {
     try {
       const userId = req.params.id;
-      let cartItems = await this.getSelectedItemsFromCart(req, res, next);
 
+      const selectedItems = req.body.selectedItems ? req.body.selectedItems.split(',') : []; // Array of selected item ids from query params
+      let cartItems;
+      if (selectedItems.length === 0) {
+        cartItems = await Cart.findAll({ where: { userId: userId } });
+      } else {
+        cartItems = await Cart.findAll({
+          where: {
+            userId: userId,
+            productId: selectedItems
+          }
+        });
+      }
       if (cartItems.length > 0) {
-        const orderSummary = this.displayOrderSummary(cartItems);
+        // Display order summary
+        const orderSummary = {
+          totalItems: 0,
+          totalPrice: 0,
+          items: []
+        };
 
-        const paymentInfo = await this.collectPaymentInfo(req, res, next);
+        for (const item of cartItems) {
+          const product = await Product.findOne({ where: { id: item.productId } });
+          const totalCostForItems = product.price * item.quantity;
+          orderSummary.items.push({
+            name: product.name,
+            price: product.price,
+            quantity: item.quantity,
+            total: totalCostForItems
+          });
+          orderSummary.totalItems += item.quantity;
+          orderSummary.totalPrice += totalCostForItems;
+        };
 
-        const order = await this.placeOrder(paymentInfo, cartItems, userId);
+        // Collect payment info
+        const { address, paymentMode } = req.body;
+        const paymentInfo = { address, paymentMode };
+
+        // Place order
+        const status = 1; // Processing
+        const paymentmode = paymentInfo.paymentMode === 'Bank Transfer' ? 0 : 1;
+
+        const order = {
+          totalPrice: orderSummary.totalPrice,
+          status: status,
+          paymentMode: paymentmode,
+          paymentDate: new Date(),
+          address: paymentInfo.address,
+          userId: userId
+        };
+        console.log("Order:", order);
+        const createdOrder = await Order.create(order);
+
+        // Create order details and update product quantities
+        for (const item of cartItems) {
+          const product = await Product.findOne({ where: { id: item.productId } });
+          if (product) {
+            const orderDetail = {
+              orderId: createdOrder.id,
+              productId: item.productId,
+              quantity: item.quantity,
+              unitPrice: product.price,
+              color: item.color,
+              discount: item.discount
+            }
+            await OrderDetail.create(orderDetail);
+            // Update product quantities
+            product.unitInStock -= item.quantity;
+            product.quantitySold += item.quantity;
+            await product.save();
+          }
+        }
 
         res.status(200).send({
           message: "Order placed and paid successfully",
           orderSummary: orderSummary,
-          order: order
+          order: createdOrder
         });
       } else {
         res.status(200).send({
@@ -201,116 +265,6 @@ class UserController {
       });
     }
   }
-
-  // Get cart items selected by user
-  async getSelectedItemsFromCart(req, res, next) {
-    try {
-      const userId = req.params.id;
-      const selectedItems = req.query.selectedItems ? req.query.selectedItems.split(',') : []; // Array of selected item ids from query params
-      let cartItems = await Cart.findAll({ where: { userId } });
-      cartItems = cartItems.filter(item => selectedItems.length === 0 || selectedItems.includes(item.id.toString()));
-      res.status(200).send(cartItems);
-    } catch (error) {
-      console.error("Error getting cart items:", error.message);
-      res.status(500).send({
-        message: "Error getting cart items",
-        error: error.message
-      });
-    }
-  }
-
-  // Display order summary
-  async displayOrderSummary(req, res, next) {
-    try {
-      const userId = req.params.id;
-      let cartItems = await this.getSelectedItemsFromCart(userId);
-      let orderSummary = {
-        totalItems: 0,
-        totalPrice: 0,
-        items: []
-      };
-
-      cartItems.forEach(item => {
-        const totalCostForItem = item.price * item.quantity;
-        orderSummary.items.push({
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          total: totalCostForItem
-        });
-        orderSummary.totalItems += item;
-        orderSummary.totalPrice += total;
-      });
-
-      res.status(200).send(orderSummary);
-    } catch (error) {
-      console.error("Error getting order summary:", error.message);
-      res.status(500).send({
-        message: "Error getting order summary",
-        error: error.message
-      });
-    }
-  }
-
-  async collectPaymentInfo(req, res, next) {
-    try {
-      const { address, paymentMode } = req.body;
-      const paymentInfo = { address, paymentMode };
-      res.status(200).send(paymentInfo);
-    } catch (error) {
-      console.error("Error collecting payment info:", error.message);
-      res.status(500).send({
-        message: "Error collecting payment info",
-        error: error.message
-      });
-    }
-  }
-
-  // Place order
-  async placeOrder(paymentInfo, cartItems, userId) {
-    // Calculate total price
-    const totalPrice = cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
-
-    // Set status and payment mode
-    const status = 1; // Processing
-    const paymentMode = paymentInfo.payment_mode === 'Bank Transfer' ? 0 : 1;
-
-    // Create order
-    const order = {
-      total_price: totalPrice,
-      status: status,
-      payment_mode: paymentMode,
-      payment_date: new Date(),
-      address: paymentInfo.address,
-      id_user: userId
-    };
-
-    const createdOrder = await Order.create(order);
-
-    // Create order details and update product quantities
-    for (const item of cartItems) {
-      const product = await Product.findOne({ where: { id: item.productId } });
-      if (product) {
-        // Create order detail
-        const orderDetail = {
-          orderId: createdOrder.id,
-          productId: item.productId,
-          quantity: item.quantity,
-          unitPrice: item.unitPrice,
-          color: item.color,
-          discount: item.discount
-        }
-        await OrderDetail.create(orderDetail);
-
-        // Update product quantities
-        product.unitInStock -= item.quantity;
-        product.quantitySold += item.quantity;
-        await product.save();
-      }
-    }
-    return createdOrder;
-  }
-
   // Get order summary for latest orders
   async getLatestOrderSummary(req, res, next) {
     try {
@@ -363,8 +317,8 @@ class UserController {
       const order = await Order.findOne({ where: { id: orderId } });
 
       if (order) {
-        order.payment_mode = paymentInfo.payment_mode;
-        order.payment_date = paymentInfo.payment_date;
+        order.paymentMode = paymentInfo.paymentMode;
+        order.paymentDate = paymentInfo.paymentDate;
 
         await order.save();
         res.send("Payment info updated for order");
@@ -390,7 +344,7 @@ class UserController {
         await order.save();
 
         // Get order items
-        const orderItems = await OrderItem.findAll({ where: { orderId: orderId } });
+        const orderItems = await Order.findAll({ where: { orderId: orderId } });
 
         // Update product quantities
         for (const item of orderItems) {
