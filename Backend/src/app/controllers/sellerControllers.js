@@ -123,8 +123,28 @@ class SellerController {
   // Redirect to order detail by product id
   async viewOrderDetail(req, res, next) {
     try {
-      const orderDetail = await OrderDetail.findOne({ where: { productId: req.params.id } });
-      res.send(orderDetail);
+      const orderDetails = await OrderDetail.findAll({
+        where: { productId: req.params.id },
+        // This is to include the order and user details(not confirmed)
+        include: [{
+          model: Order,
+          as: 'order',
+          include: [{
+            model: User,
+            as: 'user'
+          }]
+        }]
+      });
+
+      const detailedOrderDetails = orderDetails.map(detail => {
+        return {
+          orderDetail: detail,
+          order: detail.order,
+          buyer: detail.order.user
+        };
+      });
+
+      res.send(detailedOrderDetails);
     }
     catch (errors) {
       console.error("Error viewing order detail:", errors.message);
@@ -136,7 +156,7 @@ class SellerController {
   async confirmOrder(req, res, next) {
     try {
       const orderDetailId = req.params.id;
-      const sellerId = req.params.sellerId;
+      const sellerId = req.params.id;
       const orderDetail = await OrderDetail.findOne({ where: { id: orderDetailId, sellerId: sellerId } });
 
       if (!orderDetail) {
@@ -156,11 +176,15 @@ class SellerController {
   // View customers who are currently shopping
   async viewActiveCustomers(req, res, next) {
     try {
-      const activeOrders = await Order.findAll({ where: { status: 1 } });
+      const sellerId = req.params.id;
 
-      const customerIds = [...new Set(activeOrders.map(order => order.userId))];
+      const activeOrderDetails = await OrderDetail.findAll({ where: { status: 1, sellerId: sellerId } });
 
-      const activeCustomers = [];
+      const orderIds = [...new Set(activeOrderDetails.map(orderDetail => orderDetail.orderId))];
+
+      const orders = await Order.findAll({ where: { id: orderIds } });
+
+      const customerIds = [...new Set(orders.map(order => order.userId))]; const activeCustomers = [];
       for (let id of customerIds) {
         const customer = await User.findOne({ where: { id: id } });
         activeCustomers.push(customer);
@@ -180,12 +204,13 @@ class SellerController {
   async viewCustomerPurchases(req, res, next) {
     try {
       const customerId = req.params.id;
+      const sellerId = req.params.id;
 
       const orders = await Order.findAll({ where: { userId: customerId } });
 
       const customerPurchases = [];
       for (let order of orders) {
-        const orderDetails = await OrderDetail.findAll({ where: { orderId: order.id } });
+        const orderDetails = await OrderDetail.findAll({ where: { orderId: order.id, sellerId: sellerId } });
         for (let detail of orderDetails) {
           const product = await Product.findOne({ where: { id: detail.productId } });
           customerPurchases.push({
@@ -198,47 +223,13 @@ class SellerController {
 
       res.status(200).send(customerPurchases);
     } catch (error) {
-      console.error("Error viewing customer's purchases:", error.message);
+      console.error("Error viewing customer purchases:", error.message);
       res.status(500).send({
-        message: "Error viewing customer's purchases",
+        message: "Error viewing customer purchases",
         error: error.message
       });
     }
   }
-  // View customer's purchased items and their details
-  // async viewCustomerPurchases(req, res, next) {
-  //   try {
-  //     const customerId = req.params.customerId;
-  //     const page = req.query.page ? parseInt(req.query.page) : 1;
-  //     const itemsPerPage = req.query.itemsPerPage ? parseInt(req.query.itemsPerPage) : 10;
-
-  //     // Calculate the offset into the list of orders
-  //     const offset = (page - 1) * itemsPerPage;
-
-  //     const orders = await Order.findAll({ where: { userId: customerId }, limit: itemsPerPage, offset: offset });
-
-  //     const customerPurchases = [];
-  //     for (let order of orders) {
-  //       const orderDetails = await OrderDetail.findAll({ where: { orderId: order.id } });
-  //       for (let detail of orderDetails) {
-  //         const product = await Product.findOne({ where: { id: detail.productId } });
-  //         customerPurchases.push({
-  //           order: order,
-  //           orderDetail: detail,
-  //           product: product
-  //         });
-  //       }
-  //     }
-
-  //     res.status(200).send(customerPurchases);
-  //   } catch (error) {
-  //     console.error("Error viewing customer's purchases:", error.message);
-  //     res.status(500).send({
-  //       message: "Error viewing customer's purchases",
-  //       error: error.message
-  //     });
-  //   }
-  // }
 }
 
 module.exports = new SellerController;
