@@ -4,7 +4,7 @@ const Order = require("../models/Orders");
 const OrderDetail = require("../models/OrdersDetail");
 const ImageProduct = require("../models/ImageProduct");
 const Cart = require("../models/Cart");
-
+const Type = require("../models/Type");
 class SellerController {
   async viewListProduct(req, res, next) {
     try {
@@ -21,6 +21,24 @@ class SellerController {
     catch (errors) {
       console.error("Error viewing product:", errors.message);
       res.status(400).send("Error viewing product");
+    }
+  }
+  // Add a new product type
+  async addProductType(req, res, next) {
+    try {
+      const { name, gender, sizeFrom, sizeTo } = req.body;
+
+      const newType = await Type.create({
+        name,
+        gender,
+        sizeFrom,
+        sizeTo
+      });
+
+      res.send(newType);
+    } catch (error) {
+      console.error("Error adding product type:", error.message);
+      res.status(400).send("Error adding product type");
     }
   }
 
