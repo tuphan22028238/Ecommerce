@@ -4,6 +4,7 @@ const path = {
   register : '/register',
   profile : '/profile',
   product : '/show/:id',
+  order_checkout : '/orderCheckout',
   seller : {
     list_product : '/seller/listProduct/:id',
     edit_product : '/seller/editProduct/:id',

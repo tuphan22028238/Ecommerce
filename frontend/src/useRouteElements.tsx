@@ -13,6 +13,7 @@ import { AppContext } from "./context/app.context"
 import path from "./ultis/path"
 import Cart from "./pages/Cart/Cart"
 import PossesProductList from "./pages/PossesProductList"
+import OrderCheckOut from "./pages/OrderCheckOut"
 function ProtectedRoute() {
   const {isAuthenticated} = useContext(AppContext)
   return isAuthenticated ? <Outlet/> : <Navigate to='/login' />
@@ -105,8 +106,15 @@ export default function useRouteElements() {
           <Cart/>
         </MainLayout>
       )
+    },
+    {
+      path: path.order_checkout,
+      element: (
+        <MainLayout>
+          <OrderCheckOut/>
+        </MainLayout>
+      )
     }
-    
   ])
   return routerElements
 }
