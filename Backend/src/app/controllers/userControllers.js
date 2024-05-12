@@ -49,8 +49,9 @@ class UserController {
 
       for (const cartItem of cartItems) {
         const product = await Product.findOne({ where: { id: cartItem.productId } });
+        const cartDetails = await Cart.findOne({ where: { userId: req.params.id, productId: product.id } });
         if (product) {
-          myCart.push(product);
+          myCart.push({product, cartDetails});
         }
       }
 
@@ -86,6 +87,10 @@ class UserController {
           size,
         });
         res.send("Product added to cart");
+      } else {
+        product.quantity += quantity;
+        await product.save();
+        res.status(200).send("Product quantity updated in cart");
       }
       // Update the quantity of the product in the cart
     } catch (error) {
@@ -100,8 +105,8 @@ class UserController {
       // Find the product in the cart
       const product = await Cart.findOne({
         where: {
-          userId: req.params.id,
-          productId: req.body.productId,
+          userId: req.params.userId,
+          productId: req.params.productId,
         },
       });
       // Delete the product from the cart
