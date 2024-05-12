@@ -23,17 +23,6 @@ class SellerController {
       res.status(400).send("Error viewing product");
     }
   }
-  // Add a new product type
-  async addProductType(req, res, next) {
-    try {
-      const newType = await Type.create(req.body);
-
-      res.send(newType);
-    } catch (error) {
-      console.error("Error adding product type:", error.message);
-      res.status(400).send("Error adding product type");
-    }
-  }
 
   async viewProductType(req, res, next) {
     try {
@@ -122,6 +111,31 @@ class SellerController {
     } catch (errors) {
       console.error("Error edit product:", errors.message);
       res.status(400).send("Error edit product");
+    }
+  }
+  // Update product quantity
+  async updateProductQuantity(req, res, next) {
+    try {
+      const sellerId = req.params.id;
+      const productId = req.body.productId;
+      const newQuantity = req.body.quantity;
+
+      const product = await Product.findOne({ where: { id: productId, sellerId: sellerId } });
+
+      if (!product) {
+        return res.status(404).send({ message: "Product not found" });
+      }
+
+      product.quantity = newQuantity;
+      await product.save();
+
+      res.status(200).send({ message: "Product quantity updated successfully" });
+    } catch (error) {
+      console.error("Error updating product quantity:", error.message);
+      res.status(500).send({
+        message: "Error updating product quantity",
+        error: error.message
+      });
     }
   }
   //-----------------------------------------Handle Order--------------------------------------------------------//
@@ -246,6 +260,32 @@ class SellerController {
       console.error("Error viewing customer purchases:", error.message);
       res.status(500).send({
         message: "Error viewing customer purchases",
+        error: error.message
+      });
+    }
+  }
+  // Get products by type
+  async getProductsByType(req, res, next) {
+    try {
+      const sellerId = req.params.id;
+      const productType = req.query.type;
+
+      const products = await Product.findAll({
+        where: {
+          sellerId: sellerId,
+          type: productType
+        }
+      });
+
+      if (!products.length) {
+        return res.status(404).send({ message: "No products found" });
+      }
+
+      res.status(200).send(products);
+    } catch (error) {
+      console.error("Error fetching products by type:", error.message);
+      res.status(500).send({
+        message: "Error fetching products by type",
         error: error.message
       });
     }

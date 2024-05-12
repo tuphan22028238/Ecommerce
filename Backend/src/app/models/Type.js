@@ -13,11 +13,6 @@ Type.init(
             type: DataTypes.STRING(100),
             allowNull: false,
         },
-        gender: {
-            type: DataTypes.TINYINT,
-            allowNull: true,
-            comment: "0: nữ - 1: nam",
-        },
     },
     {
         sequelize,
