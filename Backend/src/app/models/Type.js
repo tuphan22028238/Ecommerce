@@ -15,18 +15,8 @@ Type.init(
         },
         gender: {
             type: DataTypes.TINYINT,
-            allowNull: false,
+            allowNull: true,
             comment: "0: nữ - 1: nam",
-        },
-        sizeFrom: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            field: "size_from",
-        },
-        sizeTo: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            field: "size_to",
         },
     },
     {

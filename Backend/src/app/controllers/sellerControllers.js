@@ -6,6 +6,7 @@ const ImageProduct = require("../models/ImageProduct");
 const Cart = require("../models/Cart");
 const Type = require("../models/Type");
 class SellerController {
+  //----------------------------------------Handle Product---------------------------------------------------------//
   async viewListProduct(req, res, next) {
     try {
       let listProduct = []
@@ -25,19 +26,23 @@ class SellerController {
   // Add a new product type
   async addProductType(req, res, next) {
     try {
-      const { name, gender, sizeFrom, sizeTo } = req.body;
-
-      const newType = await Type.create({
-        name,
-        gender,
-        sizeFrom,
-        sizeTo
-      });
+      const newType = await Type.create(req.body);
 
       res.send(newType);
     } catch (error) {
       console.error("Error adding product type:", error.message);
       res.status(400).send("Error adding product type");
+    }
+  }
+
+  async viewProductType(req, res, next) {
+    try {
+      const types = await Type.findAll();
+
+      res.send(types);
+    } catch (error) {
+      console.error("Error viewing product types:", error.message);
+      res.status(400).send("Error viewing product types");
     }
   }
 
@@ -119,7 +124,7 @@ class SellerController {
       res.status(400).send("Error edit product");
     }
   }
-  //-------------------------------------------------------------------------------------------------//
+  //-----------------------------------------Handle Order--------------------------------------------------------//
   // View list product being ordered
   async viewListProductOrder(req, res, next) {
     try {
@@ -136,7 +141,6 @@ class SellerController {
       res.status(400).send("Error viewing product");
     }
   }
-
   // Redirect to order detail by product id
   async viewOrderDetail(req, res, next) {
     try {
@@ -162,7 +166,6 @@ class SellerController {
       res.status(400).send("Error viewing order detail");
     }
   }
-
   // Confirm order
   async confirmOrder(req, res, next) {
     try {
