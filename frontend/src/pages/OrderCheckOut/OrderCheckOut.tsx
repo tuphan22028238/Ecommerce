@@ -44,8 +44,10 @@ export default function OrderCheckOut(props: any) {
       }
 
     let totalPrice = 0
+    let totalProduct = 0
     for (let i = 0; i < listBuyProduct.data?.data.length; i++) {
         totalPrice += listBuyProduct.data?.data[i].price * listBuyProduct.data?.data[i].quantity
+        totalProduct += listBuyProduct.data?.data[i].quantity
     }
 
     const handleSelectPaymentMode = (mode: number) => {
@@ -140,7 +142,7 @@ export default function OrderCheckOut(props: any) {
                         <div className="ml-auto flex items-center">
                             <div>
                                 <div className="flex items-center justify-end">
-                                    <div>Tổng thanh toán (n sản phẩm):</div>
+                                    <div>Tổng thanh toán ({totalProduct} sản phẩm):</div>
                                     <div className="ml-2 text-2xl text-orange">{totalPrice} VND</div>
                                 </div>
                             </div>
