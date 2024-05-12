@@ -1,8 +1,57 @@
 import Popover from "../../components/Popover";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { prepareOrderFromCart, placeOrderFromCart } from '../../apis/user.api'
+import { getProfileFromLS } from "../../ultis/auth"
+import { ProductToBuy } from "../../types/product.type"
+import { useState } from "react";
+import { toast } from "react-toastify";
 
-export default function OrderCheckOut() {
+type BuyProductType = ProductToBuy
+
+const productToBuy: BuyProductType = {
+  productIds : [],
+  address: '',
+  paymentMode: 0
+}
+
+export default function OrderCheckOut(props: any) {
+
+    const id = Number(getProfileFromLS())
+
+    productToBuy.productIds = props.data.productIds
+
+    const [BuyProduct, setBuyProduct] = useState<BuyProductType>(productToBuy)
+    
+    const listBuyProduct = useQuery({
+        queryKey: ['listBuyProduct'],
+        queryFn: () => prepareOrderFromCart(id, props.data)
+    })
+
+    const placeOrderMutation = useMutation({
+        mutationFn: (data: BuyProductType) => placeOrderFromCart(id, data),
+        onSuccess: () => {
+            toast.success('Place order success')
+        }
+    })
+    const handlePlaceOrder = () => {
+        placeOrderMutation.mutate(BuyProduct)
+    }
+
+    const handleChange = (name: keyof BuyProductType) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        setBuyProduct((prev) => ({...prev, [name]: e.target.value}))
+      }
+
+    let totalPrice = 0
+    for (let i = 0; i < listBuyProduct.data?.data.length; i++) {
+        totalPrice += listBuyProduct.data?.data[i].price * listBuyProduct.data?.data[i].quantity
+    }
+
+    const handleSelectPaymentMode = (mode: number) => {
+        setBuyProduct((prev) => ({...prev, paymentMode: mode}))
+    }
+
     return(
         <div className='bg-neutral-100 py-16'>
             <div className="container">
@@ -26,25 +75,27 @@ export default function OrderCheckOut() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-12 text-center rounded-sm border border-gray bg-white py-5 px-4 text-sm text-gray-500">
-                                <div className="col-span-8">
-                                    <div className="flex">
-                                        <div className="flex-grow">
-                                            <div className="flex">
-                                                <img src="https://api-ecom.duthanhduoc.com/images/bbea6d3e-e5b1-494f-ab16-02eece816d50.jpg" alt="" className="h-20 w-20"/>
-                                                <div className="">ip xx sieu cap vjp pro</div>
+                            {listBuyProduct.data?.data.map((item: any) => (
+                                <div className="grid grid-cols-12 text-center rounded-sm border border-gray bg-white py-5 px-4 text-sm text-gray-500">
+                                    <div className="col-span-8">
+                                        <div className="flex">
+                                            <div className="flex-grow">
+                                                <div className="flex">
+                                                    <img src="https://api-ecom.duthanhduoc.com/images/bbea6d3e-e5b1-494f-ab16-02eece816d50.jpg" alt="" className="h-20 w-20"/>
+                                                    <div className="">{item.name}</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-span-4">
-                                    <div className="grid text-center grid-cols-3">
-                                        <div className="col-span-1 text-center">66.666đ</div>
-                                        <div className="col-span-1 text-center">12</div>
-                                        <div className="col-span-1 text-center">đơn giá x số lượng</div>
+                                    <div className="col-span-4">
+                                        <div className="grid text-center grid-cols-3">
+                                            <div className="col-span-1 text-center">{item.price}đ</div>
+                                            <div className="col-span-1 text-center">{item.quantity}</div>
+                                            <div className="col-span-1 text-center">{item.price * item.quantity}</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            ))}
                         </div>
                         <div className="my-3 rounded-sm bg-white p-5 shadow">
                             <div>
@@ -57,6 +108,7 @@ export default function OrderCheckOut() {
                                     name = "address"
                                     type="address"
                                     placeholder="Địa chỉ nhận hàng"
+                                    onChange={handleChange('address')}
                                     />
                             </div>
                             <div className="grid grid-cols-12">
@@ -72,11 +124,11 @@ export default function OrderCheckOut() {
                                         renderPopover={
                                         <div className="bg-white relative shadow-md rounded-sm border border-gray-200">
                                             <div className="flex flex-col py-2 px-3">
-                                                <button className="py-2 px-3 hover:text-orange-500 mt-2 text-left">Thanh toán khi nhận hàng</button>
-                                                <button className="py-2 px-3 hover:text-orange-500 mt-2 text-left">Thanh toán trực tuyến</button>
+                                                <button onClick = {() => handleSelectPaymentMode(0)} className="py-2 px-3 hover:text-orange-500 mt-2 text-left">Thanh toán khi nhận hàng</button>
+                                                <button onClick = {() => handleSelectPaymentMode(1)} className="py-2 px-3 hover:text-orange-500 mt-2 text-left">Thanh toán trực tuyến</button>
                                             </div>
                                         </div>}>
-                                        <span className="mx-1">Thanh toán khi nhận hàng</span>
+                                        <span className="mx-1">{BuyProduct.paymentMode === 0 ? 'Thanh toán khi nhận hàng' : 'Thanh toán trực tuyến'}</span>
                                     </Popover>
                                 </div>
                             </div>
@@ -89,10 +141,10 @@ export default function OrderCheckOut() {
                             <div>
                                 <div className="flex items-center justify-end">
                                     <div>Tổng thanh toán (n sản phẩm):</div>
-                                    <div className="ml-2 text-2xl text-orange">₫1.xxx.xxx</div>
+                                    <div className="ml-2 text-2xl text-orange">{totalPrice} VND</div>
                                 </div>
                             </div>
-                            <Button className="ml-4 flex h-10 w-40 items-center justify-center bg-red-500 text-sm uppercase text-white hover:bg-red-600">mua hàng</Button>
+                            <Button onClick = {handlePlaceOrder}className="ml-4 flex h-10 w-40 items-center justify-center bg-red-500 text-sm uppercase text-white hover:bg-red-600">mua hàng</Button>
                         </div>
                     </div>
                 </div>
