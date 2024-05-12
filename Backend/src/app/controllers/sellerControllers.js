@@ -273,7 +273,7 @@ class SellerController {
       const products = await Product.findAll({
         where: {
           sellerId: sellerId,
-          type: productType
+          typeId: productType
         }
       });
 
@@ -286,6 +286,90 @@ class SellerController {
       console.error("Error fetching products by type:", error.message);
       res.status(500).send({
         message: "Error fetching products by type",
+        error: error.message
+      });
+    }
+  }
+  // Get best selling products
+  async getBestSellingProducts(req, res, next) {
+    try {
+      const sellerId = req.params.id;
+
+      const products = await Product.findAll({
+        where: {
+          sellerId: sellerId
+        }
+      });
+
+      if (!products.length) {
+        return res.status(404).send({ message: "No products found" });
+      }
+
+      const productIds = [...new Set(products.map(product => product.id))];
+
+      const orderDetails = await OrderDetail.findAll({ where: { productId: productIds } });
+
+      const bestSellingProducts = [];
+      for (let productId of productIds) {
+        const productOrderDetails = orderDetails.filter(orderDetail => orderDetail.productId === productId);
+        const product = await Product.findOne({ where: { id: productId } });
+        const totalQuantity = productOrderDetails.reduce((total, orderDetail) => total + orderDetail.quantity, 0);
+        bestSellingProducts.push({
+          product: product,
+          totalQuantity: totalQuantity
+        });
+      }
+
+      bestSellingProducts.sort((a, b) => b.totalQuantity - a.totalQuantity);
+
+      res.status(200).send(bestSellingProducts);
+    } catch (error) {
+      console.error("Error fetching best selling products:", error.message);
+      res.status(500).send({
+        message: "Error fetching best selling products",
+        error: error.message
+      });
+    }
+  }
+  // Get best selling products by type
+  async getBestSellingProductsByType(req, res, next) {
+    try {
+      const sellerId = req.params.id;
+      const productType = req.query.type;
+
+      const products = await Product.findAll({
+        where: {
+          sellerId: sellerId,
+          typeId: productType
+        }
+      });
+
+      if (!products.length) {
+        return res.status(404).send({ message: "No products found" });
+      }
+
+      const productIds = [...new Set(products.map(product => product.id))];
+
+      const orderDetails = await OrderDetail.findAll({ where: { productId: productIds } });
+
+      const getBestSellingProductsByType = [];
+      for (let productId of productIds) {
+        const productOrderDetails = orderDetails.filter(orderDetail => orderDetail.productId === productId);
+        const product = await Product.findOne({ where: { id: productId } });
+        const totalQuantity = productOrderDetails.reduce((total, orderDetail) => total + orderDetail.quantity, 0);
+        getBestSellingProductsByType.push({
+          product: product,
+          totalQuantity: totalQuantity
+        });
+      }
+
+      getBestSellingProductsByType.sort((a, b) => b.totalQuantity - a.totalQuantity);
+
+      res.status(200).send(getBestSellingProductsByType);
+    } catch (error) {
+      console.error("Error fetching best selling products:", error.message);
+      res.status(500).send({
+        message: "Error fetching best selling products",
         error: error.message
       });
     }
