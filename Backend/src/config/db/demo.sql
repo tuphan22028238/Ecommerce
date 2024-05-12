@@ -8,7 +8,7 @@ INSERT INTO `user` (`id`, `username`, `password`, `name`, `dob`, `phone`, `role`
 (4, 'admin35', '123123',  'sdfsdf', '2018-02-13', '3242342', 3, 'fdsdfád', 'nghdfdsia@gmail.com', 1);
 
 -- type 
-INSERT INTO `type` ( `name`, `gender`, `size_from`, `size_to`) VALUES
+INSERT INTO `type` ( `name`,) VALUES
 ( 'Áo sơ mi', 1, 36, 42),
 ( 'Quần jean', 1, 28, 34),
 ( 'Váy dài', 0, 34, 40),
