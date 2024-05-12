@@ -124,7 +124,7 @@ class SellerController {
   async viewListProductOrder(req, res, next) {
     try {
       let listProduct = []
-      const myProduct = await Product.findAll({ where: { idSeller: req.params.id } });
+      const myProduct = await Product.findAll({ where: { sellerId: req.params.id } });
       for (let i = 0; i < myProduct.length; i++) {
         const product = await OrderDetail.findAll({ where: { productId: myProduct[i].dataValues.id } });
         listProduct.push(product);
@@ -141,25 +141,19 @@ class SellerController {
   async viewOrderDetail(req, res, next) {
     try {
       const orderDetails = await OrderDetail.findAll({
-        where: { productId: req.params.id },
-        // This is to include the order and user details(not confirmed)
-        include: [{
-          model: Order,
-          as: 'order',
-          include: [{
-            model: User,
-            as: 'user'
-          }]
-        }]
+        where: { productId: req.body.productId },
       });
 
-      const detailedOrderDetails = orderDetails.map(detail => {
+      const detailedOrderDetails = await Promise.all(orderDetails.map(async detail => {
+        const order = await Order.findOne({ where: { id: detail.orderId } });
+        const buyer = await User.findByPk(order.userId);
+
         return {
           orderDetail: detail,
-          order: detail.order,
-          buyer: detail.order.user
+          order: order,
+          buyer: buyer
         };
-      });
+      }));
 
       res.send(detailedOrderDetails);
     }
@@ -189,48 +183,54 @@ class SellerController {
       res.status(400).send("Error confirming order");
     }
   }
-
-  // View customers who are currently shopping
-  async viewActiveCustomers(req, res, next) {
+  // View confirmed customers
+  async viewConfirmedCustomers(req, res, next) {
     try {
       const sellerId = req.params.id;
 
-      const activeOrderDetails = await OrderDetail.findAll({ where: { status: 1, sellerId: sellerId } });
+      const products = await Product.findAll({ where: { sellerId: sellerId } });
 
-      const orderIds = [...new Set(activeOrderDetails.map(orderDetail => orderDetail.orderId))];
+      const productIds = [...new Set(products.map(product => product.id))];
+
+      const orderDetails = await OrderDetail.findAll({ where: { productId: productIds } });
+
+      const orderIds = [...new Set(orderDetails.map(orderDetail => orderDetail.orderId))];
 
       const orders = await Order.findAll({ where: { id: orderIds } });
 
-      const customerIds = [...new Set(orders.map(order => order.userId))]; const activeCustomers = [];
+      const customerIds = [...new Set(orders.map(order => order.userId))];
+
+      const confirmedCustomers = [];
       for (let id of customerIds) {
-        const customer = await User.findOne({ where: { id: id } });
-        activeCustomers.push(customer);
+        const customer = await User.findOne({ where: { id: id, status: 1 } });
+        if (customer) {
+          confirmedCustomers.push(customer);
+        }
       }
 
-      res.status(200).send(activeCustomers);
+      res.status(200).send(confirmedCustomers);
     } catch (error) {
-      console.error("Error viewing active customers:", error.message);
+      console.error("Error viewing confirmed customers:", error.message);
       res.status(500).send({
-        message: "Error viewing active customers",
+        message: "Error viewing confirmed customers",
         error: error.message
       });
     }
   }
-
   // View customer's purchased items and their details
-  async viewCustomerPurchases(req, res, next) {
+  async viewPurchasedCustomers(req, res, next) {
     try {
       const customerId = req.params.id;
       const sellerId = req.params.id;
 
       const orders = await Order.findAll({ where: { userId: customerId } });
 
-      const customerPurchases = [];
+      const purchasedCustomers = [];
       for (let order of orders) {
         const orderDetails = await OrderDetail.findAll({ where: { orderId: order.id, sellerId: sellerId } });
         for (let detail of orderDetails) {
           const product = await Product.findOne({ where: { id: detail.productId } });
-          customerPurchases.push({
+          purchasedCustomers.push({
             order: order,
             orderDetail: detail,
             product: product
@@ -238,7 +238,7 @@ class SellerController {
         }
       }
 
-      res.status(200).send(customerPurchases);
+      res.status(200).send(purchasedCustomers);
     } catch (error) {
       console.error("Error viewing customer purchases:", error.message);
       res.status(500).send({
