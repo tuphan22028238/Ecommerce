@@ -11,6 +11,7 @@ const path = {
     add_product : '/seller/addProduct'
   },
   cart : '/cart',
+  viewOrder : '/viewOrder'
 }
 
 export default path

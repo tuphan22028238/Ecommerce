@@ -14,6 +14,7 @@ import path from "./ultis/path"
 import Cart from "./pages/Cart/Cart"
 import PossesProductList from "./pages/PossesProductList"
 import OrderCheckOut from "./pages/OrderCheckOut"
+import ViewOrder from "./pages/PossesProductList/ViewOrder/ViewOrder"
 function ProtectedRoute() {
   const {isAuthenticated} = useContext(AppContext)
   return isAuthenticated ? <Outlet/> : <Navigate to='/login' />
@@ -114,7 +115,16 @@ export default function useRouteElements() {
           <OrderCheckOut/>
         </MainLayout>
       )
+    },
+    {
+      path: path.viewOrder,
+      element: (
+        <MainLayout>
+          <ViewOrder/>
+        </MainLayout>
+      )
     }
+
   ])
   return routerElements
 }
