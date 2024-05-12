@@ -180,7 +180,7 @@ class UserController {
     try {
       const userId = req.params.id;
 
-      const selectedItems = req.body.selectedItems ? req.body.selectedItems.split(',') : []; // Array of selected item ids from query params
+      const selectedItems =  req.body.productIds;
       let cartItems;
       if (selectedItems.length === 0) {
         cartItems = await Cart.findAll({ where: { userId: userId } });
@@ -219,17 +219,15 @@ class UserController {
 
         // Place order
         const status = 1; // Processing
-        const paymentmode = paymentInfo.paymentMode === 'Bank Transfer' ? 0 : 1;
 
         const order = {
           totalPrice: orderSummary.totalPrice,
           status: status,
-          paymentMode: paymentmode,
+          paymentMode: paymentMode,
           paymentDate: new Date(),
           address: paymentInfo.address,
           userId: userId
         };
-        console.log("Order:", order);
         const createdOrder = await Order.create(order);
 
         // Create order details and update product quantities
@@ -268,6 +266,31 @@ class UserController {
         message: "Error during checkout",
         error: error.message
       });
+    }
+  }
+
+  async getPrepareOrderFromCart(req, res, next) {
+    try {
+      const userId = req.params.id;
+      const BuyProducts = req.body.productIds;
+      const preparedOrder = []
+      for (const productId of BuyProducts) {
+        const productToBuy = {}
+        const product = await Product.findOne({ where: { id: productId } });
+        const productInCart = await Cart.findOne({ where: { userId: userId, productId: productId } }); 
+
+        productToBuy.productId = product.id;
+        productToBuy.name = product.name;
+        productToBuy.quantity = productInCart.quantity;
+        productToBuy.price = product.price;
+        productToBuy.color = productInCart.color;
+        productToBuy.discount = productInCart.discount;
+        
+        preparedOrder.push(productToBuy);
+      }
+      res.send(preparedOrder);
+    } catch (error) {
+      console.error("Error getting prepare orders:", error.message);
     }
   }
   // Get order summary for latest orders
