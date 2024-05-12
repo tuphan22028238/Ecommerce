@@ -1,6 +1,5 @@
 import http from '../ultis/http'
 import { Product, ProductList, } from "types/product.type";
-import { Category } from 'types/category.type';
 
 export const getProducts = (params: any) => http.get<ProductList>("/show", { params });
 

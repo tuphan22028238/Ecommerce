@@ -1,23 +1,55 @@
-import {useQuery, } from "@tanstack/react-query"
+import {useQuery,useMutation } from "@tanstack/react-query"
 import { Link, useParams } from "react-router-dom"
 import { getProduct } from "../../apis/products.api"
-
+import { addProductToCart } from "../../apis/user.api"
+import { getProfileFromLS } from "../../ultis/auth"
 import { formatCurrency, formatNumberToSocialStyle, rateSale } from '../../ultis/utils'
 import InputNumber from '../../components/InputNumber'
 import { useEffect, useMemo, useState } from 'react'
-import { Product } from 'types/product.type'
-import path from "../../ultis/path"
+import { Product, ProductTocart } from 'types/product.type'
+import { toast } from 'react-toastify'
+
+type FormStateType = ProductTocart
+
+const intialFormState : FormStateType = {
+  productId: 0, 
+  quantity: 1, 
+  color: 1, 
+  discount: 0,
+  size: 2
+}
 
 export default function ProductDetail() {
   const { id } = useParams()
+  const [formState, setFormState] = useState<FormStateType>(intialFormState)
   const { data: ProductDetailData } = useQuery({
     queryKey: ['product', id],
-    queryFn: () => getProduct(id as string)
+    queryFn: () => {
+      setFormState((prev) => ({...prev, productId: Number(id)}))
+      return getProduct(id as string)
+    }
   })
   const product = ProductDetailData?.data
 
   const [currentIndexImages, setCurrentIndexImages] = useState([0, 5])
   const [activeImage, setActiveImage] = useState('')
+  
+  const addToCartMutation = useMutation({
+    mutationFn: (data) => addProductToCart(Number(getProfileFromLS()), data),
+    onSuccess: () => {  
+      toast.success('Add product success')
+    },
+    onError: (error) => {
+      toast.error(error.response?.data)
+    }
+  })
+
+  const addToCart = () =>{
+    addToCartMutation.mutate(formState)
+  }
+  const handleChange = (name: keyof FormStateType) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormState((prev) => ({...prev, [name]: Number(e.target.value)}))
+  }
 
   // const currentImages = useMemo(
   //   () => (product ? product.images.slice(...currentIndexImages) : []),
@@ -137,8 +169,9 @@ export default function ProductDetail() {
                     </svg>
                   </button>
                   <InputNumber
-                    value={1}
+                    value={formState.quantity}
                     className=''
+                    onChange={handleChange('quantity')}
                     classNameError='hidden'
                     classNameInput='h-8 w-14 border-t border-b border-gray-300 p-1 text-center outline-none'
                   />
@@ -158,7 +191,10 @@ export default function ProductDetail() {
                 </div>
               </div>
               <div className='mt-8 flex items-center'>
-                <Link to={path.cart} className='flex h-12 items-center justify-center rounded-sm border-2 border-blue-600 bg-blue-300 px-5 capitalize text-black shadow-sm hover:bg-blue-100'>
+                <Link to='' 
+                  className='flex h-12 items-center justify-center rounded-sm border-2 border-blue-600 bg-blue-300 px-5 capitalize text-black shadow-sm hover:bg-blue-100'
+                  onClick={addToCart}
+                >
                   <svg
                     enableBackground='new 0 0 15 15'
                     viewBox='0 0 15 15'

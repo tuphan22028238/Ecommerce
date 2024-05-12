@@ -35,3 +35,11 @@ export interface ProductListConfig {
   name?: string
   category?: string
 }
+
+export interface ProductTocart {
+  productId: number
+  quantity: number
+  color: number
+  discount: number
+  size: number
+}
