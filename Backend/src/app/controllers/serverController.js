@@ -13,6 +13,30 @@ class ServerController {
       res.status(400).send("Error viewing all product");
     }
   }
+  // View products by type
+  async viewProductsByType(req, res, next) {
+    try {
+      const productType = req.query.type;
+
+      const products = await Product.findAll({
+        where: {
+          typeId: productType
+        }
+      });
+
+      if (!products.length) {
+        return res.status(404).send({ message: "No products found" });
+      }
+
+      res.status(200).send(products);
+    } catch (error) {
+      console.error("Error fetching products by type:", error.message);
+      res.status(500).send({
+        message: "Error fetching products by type",
+        error: error.message
+      });
+    }
+  }
   async viewProductsFollowPage(req, res, next) {
     try {
       const page = req.query.page ? parseInt(req.query.page) : 1;
@@ -24,7 +48,7 @@ class ServerController {
 
       const data = await Product.findAll({
         where: {
-          ...category ? {typeId: category} : {},
+          ...category ? { typeId: category } : {},
           name: {
             [Op.like]: `%${req.query.search || ''}%`
           }
@@ -32,7 +56,7 @@ class ServerController {
         offset: offset,
         limit: limit,
         order: [[sortBy, order]]
-      });   
+      });
 
       const totalProducts = await Product.count()
       const total_pages = Math.ceil(totalProducts / limit)
@@ -41,7 +65,7 @@ class ServerController {
         limit,
         total_pages
       }
-      res.send({products: data, page, pagination})
+      res.send({ products: data, page, pagination })
 
     } catch (errors) {
       console.error("Error viewing all product:", errors.message);
