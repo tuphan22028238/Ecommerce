@@ -5,8 +5,7 @@ import Login from "./pages/Login"
 import ProductList from "./pages/ProductList"
 import Register from "./pages/Register"
 import ProductDetail from "./pages/ProductDetail"
-import PossesProduct from "./pages/PossesProduct/PossesProduct"
-import EditOrAddProduct from "./pages/PossesProduct/EditOrAddProduct"
+import EditOrAddProduct from "./pages/PossesProductList/EditOrAddProduct"
 import { Navigate, Outlet, useRoutes } from "react-router-dom"
 import { useContext } from "react"
 import { AppContext } from "./context/app.context"
@@ -117,7 +116,7 @@ export default function useRouteElements() {
       )
     },
     {
-      path: path.viewOrder,
+      path: path.seller.view_order,
       element: (
         <MainLayout>
           <ViewOrder/>
