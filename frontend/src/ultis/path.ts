@@ -9,7 +9,9 @@ const path = {
     list_product : '/seller/listProduct/:id',
     edit_product : '/seller/editProduct/:id',
     add_product : '/seller/addProduct',
-    view_order : '/seller/viewOrder'
+    view_order : '/seller/viewOrder',
+    view_order_detail : '/seller/orderDetail/:productId',
+    confirm_order : '/seller/confirmOrder/:orderDetailId/:productId',
   },
   cart : '/cart',
 }

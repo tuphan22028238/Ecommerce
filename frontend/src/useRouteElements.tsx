@@ -12,6 +12,8 @@ import { AppContext } from "./context/app.context"
 import path from "./ultis/path"
 import Cart from "./pages/Cart/Cart"
 import PossesProductList from "./pages/PossesProductList"
+import ViewOrderDetails from "./pages/PossesProductList/ViewOrderDetails"
+import ConfirmOrder from "./pages/PossesProductList/ConfirmOrder"
 import OrderCheckOut from "./pages/OrderCheckOut"
 import ViewOrder from "./pages/PossesProductList/ViewOrder/ViewOrder"
 function ProtectedRoute() {
@@ -120,6 +122,22 @@ export default function useRouteElements() {
       element: (
         <MainLayout>
           <ViewOrder/>
+        </MainLayout>
+      )
+    },
+    {
+      path: path.seller.view_order_detail,
+      element: (
+        <MainLayout>
+          <ViewOrderDetails/>
+        </MainLayout>
+      )
+    },
+    {
+      path: path.seller.confirm_order,
+      element: (
+        <MainLayout>
+          <ConfirmOrder/>
         </MainLayout>
       )
     }
