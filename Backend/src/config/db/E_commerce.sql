@@ -36,10 +36,7 @@ CREATE TABLE `orders` (
 
 CREATE TABLE `type` (
     `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
-    `name` VARCHAR(100) NOT NULL,
-    `gender` TINYINT(4) NOT NULL,
-    `size_from` INT(11),
-    `size_to` INT(11)
+    `name` VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE `product` (
