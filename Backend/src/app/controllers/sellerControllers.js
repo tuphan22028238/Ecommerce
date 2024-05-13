@@ -5,19 +5,19 @@ const OrderDetail = require("../models/OrdersDetail");
 const ImageProduct = require("../models/ImageProduct");
 const Cart = require("../models/Cart");
 const Type = require("../models/Type");
+const PossesProduct = require("../models/PossesProduct")
 class SellerController {
   //----------------------------------------Handle Product---------------------------------------------------------//
   async viewListProduct(req, res, next) {
     try {
-      let listProduct = []
+      // let listProduct = []
       // const myProduct = await PossesProduct.findAll({ where: { userId: req.params.id } });
       // for (let i = 0; i < myProduct.length; i++) {
       //   const product = await Product.findOne({ where: { id: myProduct[i].dataValues.productId } });
       //   listProduct.push(product);
       // }
-      const myProduct = Product.findAll({ where: { idSeller: req.params.id } });
-      listProduct.push(myProduct);
-      res.send(listProduct);
+      const myProduct = await Product.findAll({ where: { sellerId: req.params.id } });
+      res.send(myProduct);
     } catch (errors) {
       console.error("Error viewing product:", errors.message);
       res.status(400).send("Error viewing product");
@@ -139,9 +139,9 @@ class SellerController {
   }
   //-----------------------------------------Handle Order--------------------------------------------------------//
   // View list product being ordered
-  async viewListProductOrder(req, res, next) {
+  async viewListProductsWithOrders(req, res, next) {
     try {
-      let listProduct = []
+      const listProduct = []
       const myProduct = await Product.findAll({ where: { sellerId: req.params.id } });
       for (let i = 0; i < myProduct.length; i++) {
         const product = await OrderDetail.findAll({ where: { productId: myProduct[i].dataValues.id } });
@@ -155,10 +155,10 @@ class SellerController {
     }
   }
   // Redirect to order detail by product id
-  async viewOrderDetail(req, res, next) {
+  async viewOrderDetailsOfProduct(req, res, next) {
     try {
       const orderDetails = await OrderDetail.findAll({
-        where: { productId: req.body.productId },
+        where: { productId: req.params.productId },
       });
 
       const detailedOrderDetails = await Promise.all(orderDetails.map(async detail => {
@@ -182,9 +182,9 @@ class SellerController {
   // Confirm order
   async confirmOrder(req, res, next) {
     try {
-      const orderDetailId = req.params.id;
-      const sellerId = req.params.id;
-      const orderDetail = await OrderDetail.findOne({ where: { id: orderDetailId, sellerId: sellerId } });
+      const orderDetailId = req.params.orderDetailId;
+      const productId = req.params.productId;
+      const orderDetail = await OrderDetail.findOne({ where: { id: orderDetailId, productId } });
 
       if (!orderDetail) {
         res.status(404).send("Order detail not found or you do not have permission to confirm this order");
