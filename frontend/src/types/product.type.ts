@@ -6,6 +6,7 @@ export interface Product {
   quantityPerUnit: number
   unitInStock: number
   unitInOrder: number
+  quantitySold: number
   category: string
   createdAt: string
   updatedAt: string
@@ -34,4 +35,18 @@ export interface ProductListConfig {
   price_min?: number | string
   name?: string
   category?: string
+}
+
+export interface ProductTocart {
+  productId: number
+  quantity: number
+  color: number
+  discount: number
+  size: number
+}
+
+export interface ProductToBuy {
+  productIds : number[],
+  address: string,
+  paymentMode: number
 }
