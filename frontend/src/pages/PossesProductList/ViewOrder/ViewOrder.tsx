@@ -33,7 +33,7 @@ export default function ViewOrder() {
             {orderQuery?.data?.data.map((product: any) => (
               <Link to = {'/seller/orderDetail/' + `${product.id}`}>
               <div className="col-span-1 bg-white rounded shadow-sm hover:translate-y-[-0.08rem] mx-1 cursor-pointer" key = {`${product.id}`}>
-                <h5 className="text-base font-bold text-center">{product.name}</h5>
+                <h5 className="text-base font-bold text-center line-clamp-2 truncate">{product.name}</h5>
                 <hr className="border-gray-200 my-auto" />
 
                 <div className="p-5">
