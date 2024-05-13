@@ -16,6 +16,7 @@ const intialFormState: FormStateType = {
   description: '',
   unitInStock: 0,
   unitInOrder: 0,
+  quantitySold: 0,
   category: '',
   createdAt: '',
   updatedAt: '',

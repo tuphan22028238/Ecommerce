@@ -29,7 +29,7 @@ export default function Product( products : any) {
           <div className='mt-3 flex items-center justify-end'>
             {/* <ProductRating rating={product.rating} /> */}
             <div className='ml-2 text-sm'>
-              <span>{formatNumberToSocialStyle(product.unitInStock)}</span>
+              <span>{formatNumberToSocialStyle(product.quantitySold)}</span>
               <span className='ml-1'>Đã bán</span>
             </div>
           </div>

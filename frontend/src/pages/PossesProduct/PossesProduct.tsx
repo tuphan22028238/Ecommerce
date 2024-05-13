@@ -4,6 +4,7 @@ import { getProfileFromLS } from "../../ultis/auth"
 import { Link } from 'react-router-dom'
 import { toast } from "react-toastify"
 import path from "../../ultis/path"
+import { useEffect } from "react"
 
 export default function PossesProduct() {
   
@@ -15,9 +16,14 @@ export default function PossesProduct() {
     queryFn: () => getProducts(idSeller),
   })
 
+  useEffect(() => {
+    productQuery.refetch()
+  }, [idSeller])
+
   const deleteProductMutation = useMutation({
     mutationFn: (id: number) => deleteProduct(id),
     onSuccess: () => {
+      productQuery.refetch()
       toast.success('Delete product success')
     }
   })
