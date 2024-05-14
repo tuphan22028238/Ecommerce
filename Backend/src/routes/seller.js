@@ -13,6 +13,7 @@ route.get("/listOrders/:id", SellerController.viewListProductsWithOrders);
 route.get("/orderDetail/:productId", SellerController.viewOrderDetailsOfProduct);
 route.get("/viewConfirmedCustomers/:id", SellerController.viewConfirmedCustomers);
 route.put("/confirmOrder/:orderDetailId/:productId", SellerController.confirmOrder);
+route.get("/viewSpecificOrderDetail/:id", SellerController.viewSpecificOrderDetail);
 route.get("/viewPurchasedCustomers/:id", SellerController.viewConfirmedCustomers)
 route.get("/viewProductsByType/:id", SellerController.getProductsByType)
 route.get("/viewBestSellingProducts/:id", SellerController.getBestSellingProducts)

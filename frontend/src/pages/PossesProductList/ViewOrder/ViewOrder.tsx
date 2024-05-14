@@ -1,37 +1,53 @@
+import { getProducts } from "../../../apis/seller.api"
+import { useQuery, useMutation } from "@tanstack/react-query"
+import { getProfileFromLS } from "../../../ultis/auth"
+import { Link } from 'react-router-dom'
+import { toast } from "react-toastify"
+import path from "../../../ultis/path"
+import { useEffect } from "react"
+
 export default function ViewOrder() {
-return (
-<div>
-    <div className="container">
-      <div className="items-center text-2xl font-bold text-center">Các sản phẩm đã bán</div>
-      <div className="flex flex-col items-center">
+  
+  const idSeller = Number(getProfileFromLS())
+  
+  const orderQuery = useQuery({
+    queryKey: ['Orders', idSeller],
+    queryFn: () => getProducts(idSeller),
+  })
+
+  useEffect(() => {
+    orderQuery.refetch()
+  }, [idSeller])
+
+
+  if (orderQuery.data?.data)
+
+  return (
+    <div className="bg-gray-200">
+      {
+      typeof orderQuery?.data?.data === 'string' ? 
+            (<p>{orderQuery.data.data}</p>) :
+            <div>   
         
-        {/* {map những cái đã bán ở đây } */}
-        <div className="grid grid-cols-12 text-center rounded-sm border border-gray bg-white py-5 px-4 text-sm text-gray-500">
-              <div className="col-span-6">
-                <div className="flex">
-                  <div className="flex-grow">
-                    <div className="flex">
-                      <img src="https://api-ecom.duthanhduoc.com/images/bbea6d3e-e5b1-494f-ab16-02eece816d50.jpg" alt="" className="h-20 w-20"/>
-                      <div className="">tên sản phẩm</div>
-                    </div>
-                  </div>
+          <div className="mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 my-4">
+            {orderQuery?.data?.data.map((product: any) => (
+              <Link to = {'/seller/orderDetail/' + `${product.id}`}>
+              <div className="col-span-1 bg-white rounded shadow-sm hover:translate-y-[-0.08rem] mx-1 cursor-pointer" key = {`${product.id}`}>
+                <h5 className="text-base font-bold text-center line-clamp-2 truncate">{product.name}</h5>
+                <hr className="border-gray-200 my-auto" />
+
+                <div className="p-5">
+                    <a href="#">
+                    <img className="rounded-t-lg shadow" src="https://api-ecom.duthanhduoc.com/images/bbea6d3e-e5b1-494f-ab16-02eece816d50.jpg" alt="image here" />
+                    </a>
+                    <p className="mb-3 font-normal text-gray-700 pt-3">Số lượng đơn: {product.quantitySold}</p>
                 </div>
-                
-              </div>
-              <div className="col-span-6">
-                <div className="grid text-center grid-cols-5">
-                <div className="col-span-2">Tên người mua</div>
-                <div className="col-span-2">Số lượng mua</div>
-                <div className="col-span-1">Trạng thái</div>
-                </div>
-              </div>
-              
+            </div>
+            </Link>
+            ))}
             </div>
         </div>
-
-        
-      </div>
-    
-
-</div>
-)}
+      }    
+    </div>
+  )
+}

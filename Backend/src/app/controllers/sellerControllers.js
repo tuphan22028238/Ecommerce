@@ -199,6 +199,20 @@ class SellerController {
       res.status(400).send("Error confirming order");
     }
   }
+
+  //View specific OrderDetail
+  async viewSpecificOrderDetail(req, res, next) {
+    try { 
+      const orderDetail = await OrderDetail.findOne({ where: { id: req.params.id } });
+      const product = await Product.findOne({ where: { id: orderDetail.productId } });
+      const orders = await Order.findOne({ where: { id: orderDetail.orderId } });
+      const buyer = await User.findOne({ where: { id: orders.userId } });
+      res.send({ orderDetail, product, buyer, orders });
+    } catch (errors) {
+      console.error("Error viewing order detail:", errors.message);
+      res.status(400).send("Error viewing order detail");
+    }
+  }
   // View confirmed customers
   async viewConfirmedCustomers(req, res, next) {
     try {
