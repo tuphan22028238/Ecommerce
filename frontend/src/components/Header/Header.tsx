@@ -9,6 +9,7 @@ import { logout } from "../../apis/auth.api";
 import { AppContext } from "../../context/app.context";
 import {getProfileFromLS} from "../../ultis/auth"
 import Profile from "pages/Profile";
+import path from "../../ultis/path";
 
 function Header() {
   const {isAuthenticated,setIsAuthenticated,setProfile,profile} = useContext(AppContext)
@@ -61,7 +62,7 @@ function Header() {
               <div className="bg-white relative shadow-md rounded-sm border border-gray-200">
                 <div className="flex flex-col py-2 px-3">
                   <Link to='/profile' className="py-2 px-3 hover:text-orange-500 mt-2 text-left">User</Link>
-                  <Link to='/cart' className="py-2 px-3 hover:text-orange-500 mt-2 text-left">Giỏ hàng</Link>
+                  <Link to={path.user_order} className="py-2 px-3 hover:text-orange-500 mt-2 text-left">Theo dõi đơn hàng</Link>
                   <button onClick={handleLogout} className="py-2 px-3 hover:text-orange-500 mt-2 text-left">Logout</button>
                 </div>
               </div>

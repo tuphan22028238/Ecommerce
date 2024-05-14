@@ -16,6 +16,8 @@ import ViewOrderDetails from "./pages/PossesProductList/ViewOrderDetails"
 import ConfirmOrder from "./pages/PossesProductList/ConfirmOrder"
 import OrderCheckOut from "./pages/OrderCheckOut"
 import ViewOrder from "./pages/PossesProductList/ViewOrder/ViewOrder"
+import OrderSucess from "./pages/OrderSucess/OrderSucess"
+import UserOrder from "./pages/userOrder/UserOrder"
 function ProtectedRoute() {
   const {isAuthenticated} = useContext(AppContext)
   return isAuthenticated ? <Outlet/> : <Navigate to='/login' />
@@ -140,6 +142,22 @@ export default function useRouteElements() {
           <ConfirmOrder/>
         </MainLayout>
       )
+    },
+    {
+      path: path.order_success,
+      element: (
+        <MainLayout>
+          <OrderSucess/>
+        </MainLayout>
+      )
+    },
+    {
+      path: path.user_order,
+      element:(  
+      <MainLayout>
+        <UserOrder/>
+      </MainLayout>
+       )
     }
 
   ])

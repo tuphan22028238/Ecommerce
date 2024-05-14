@@ -14,6 +14,8 @@ const path = {
     confirm_order : '/seller/confirmOrder/:orderDetailId/:productId',
   },
   cart : '/cart',
+  order_success : '/orderSuccess',
+  user_order : '/userOrder',
 }
 
 export default path
