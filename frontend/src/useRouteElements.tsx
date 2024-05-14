@@ -5,8 +5,7 @@ import Login from "./pages/Login"
 import ProductList from "./pages/ProductList"
 import Register from "./pages/Register"
 import ProductDetail from "./pages/ProductDetail"
-import PossesProduct from "./pages/PossesProduct/PossesProduct"
-import EditOrAddProduct from "./pages/PossesProduct/EditOrAddProduct"
+import EditOrAddProduct from "./pages/PossesProductList/EditOrAddProduct"
 import { Navigate, Outlet, useRoutes } from "react-router-dom"
 import { useContext } from "react"
 import { AppContext } from "./context/app.context"
@@ -14,6 +13,7 @@ import path from "./ultis/path"
 import Cart from "./pages/Cart/Cart"
 import PossesProductList from "./pages/PossesProductList"
 import OrderCheckOut from "./pages/OrderCheckOut"
+import ViewOrder from "./pages/PossesProductList/ViewOrder/ViewOrder"
 function ProtectedRoute() {
   const {isAuthenticated} = useContext(AppContext)
   return isAuthenticated ? <Outlet/> : <Navigate to='/login' />
@@ -114,7 +114,16 @@ export default function useRouteElements() {
           <OrderCheckOut/>
         </MainLayout>
       )
+    },
+    {
+      path: path.seller.view_order,
+      element: (
+        <MainLayout>
+          <ViewOrder/>
+        </MainLayout>
+      )
     }
+
   ])
   return routerElements
 }

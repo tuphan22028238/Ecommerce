@@ -8,7 +8,8 @@ const path = {
   seller : {
     list_product : '/seller/listProduct/:id',
     edit_product : '/seller/editProduct/:id',
-    add_product : '/seller/addProduct'
+    add_product : '/seller/addProduct',
+    view_order : '/seller/viewOrder'
   },
   cart : '/cart',
 }
