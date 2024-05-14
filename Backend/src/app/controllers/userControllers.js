@@ -51,7 +51,7 @@ class UserController {
         const product = await Product.findOne({ where: { id: cartItem.productId } });
         const cartDetails = await Cart.findOne({ where: { userId: req.params.id, productId: product.id } });
         if (product) {
-          myCart.push({product, cartDetails});
+          myCart.push({ product, cartDetails });
         }
       }
 
@@ -180,7 +180,7 @@ class UserController {
     try {
       const userId = req.params.id;
 
-      const selectedItems =  req.body.productIds;
+      const selectedItems = req.body.productIds;
       let cartItems;
       if (selectedItems.length === 0) {
         cartItems = await Cart.findAll({ where: { userId: userId } });
@@ -248,6 +248,8 @@ class UserController {
             product.quantitySold += item.quantity;
             await product.save();
           }
+          // Delete item from cart
+          await item.destroy();
         }
 
         res.status(200).send({
@@ -277,7 +279,7 @@ class UserController {
       for (const productId of BuyProducts) {
         const productToBuy = {}
         const product = await Product.findOne({ where: { id: productId } });
-        const productInCart = await Cart.findOne({ where: { userId: userId, productId: productId } }); 
+        const productInCart = await Cart.findOne({ where: { userId: userId, productId: productId } });
 
         productToBuy.productId = product.id;
         productToBuy.name = product.name;
@@ -285,7 +287,7 @@ class UserController {
         productToBuy.price = product.price;
         productToBuy.color = productInCart.color;
         productToBuy.discount = productInCart.discount;
-        
+
         preparedOrder.push(productToBuy);
       }
       res.send(preparedOrder);
