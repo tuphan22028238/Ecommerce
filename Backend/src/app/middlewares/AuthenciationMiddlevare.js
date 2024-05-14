@@ -14,7 +14,7 @@ function protect(req, res, next) {
       }
     });
   } else {
-    res.send("Please login");
+    res.status(400).send("Please login before using this function");
   }
 }
 
