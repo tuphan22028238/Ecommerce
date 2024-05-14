@@ -2,17 +2,22 @@ import { useParams } from "react-router-dom"
 import { getDetailOrder } from "../../../apis/seller.api"
 import { useQuery } from "@tanstack/react-query";
 import { Link } from 'react-router-dom'
-
+import { useEffect } from "react"; 
+import { getProfileFromLS } from "../../../ultis/auth";
 
 export default function ViewOrderDetails() {
   const {productId} = useParams()
+
+  const idSeller = Number(getProfileFromLS())
 
   const orderDetailQuery = useQuery({
     queryKey: ['orderDetail', productId],
     queryFn: () => getDetailOrder(Number(productId)),
   }) 
   
-  // console.log(orderDetailQuery.data?.data); 
+  useEffect(() => {
+    orderDetailQuery.refetch()
+  }, [idSeller])
 
   return (
   <div className="bg-gray-100">

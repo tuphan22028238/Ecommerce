@@ -1,5 +1,4 @@
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';	
-import Button from "../../../components/Button";
+import { useNavigate, useParams } from 'react-router-dom';	
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { confirmOrder, getSpecificOrderDetail } from '../../../apis/seller.api';
 
@@ -11,9 +10,6 @@ export default function ConfirmOrder() {
     queryKey: ['confirmOrder', orderDetailId],
     queryFn: () => getSpecificOrderDetail(Number(orderDetailId)),
   });
-
-
-  console.log(confirmOrderQuery.data?.data);
   
   const navigate = useNavigate()
   const confirmOrderMutation = useMutation({
@@ -26,9 +22,8 @@ export default function ConfirmOrder() {
   const handleConfirm = () => { 
     confirmOrderMutation.mutate({ orderDetailId, productId });
     navigate('/seller/orderDetail/' + productId);
-    
   }
-  console.log(confirmOrderMutation.data?.data);
+
   return (
     <div>
 
