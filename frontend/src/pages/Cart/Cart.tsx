@@ -69,7 +69,7 @@ return (
             <div className="col-span-6">
               <div className="flex items-center">
                 <div className="flex flex-shrink-0 items-center justify-center pr-3">
-                  <input type="checkbox" className="h-5 w-5 accent-orange-500" />
+                  {/* <input type="checkbox" className="h-5 w-5 accent-orange-500" /> */}
                 </div>
                 <div className="flex-grow text-black">Sản phẩm</div>
               </div>
@@ -111,7 +111,7 @@ return (
                 <div className="col-span-1">{item.product.price * item.cartDetails.quantity}</div>
                 <div className="col-span-1">
                   <button 
-                    className="bg-gray-200 rounded border-2 border-red-100 hover:text-red-300"
+                    className="bg-orange-500 rounded border-2 border-red-100 text-black hover:bg-orange-300 px-2 py-1"
                     onClick={() =>handleDelete(item.product.id)}
 
                    >Xoá</button>

@@ -66,7 +66,7 @@ export default function PossesProductList() {
             {productQuery?.data?.data.map((product: any) => (
               <div className="col-span-1 bg-white rounded shadow-sm hover:translate-y-[-0.08rem] mx-1 cursor-pointer" key = {`${product.id}`}>
                 <a href="#">
-                <h5 className="text-base font-bold text-center">{product.name}</h5>
+                <h5 className="text-base font-bold text-center line-clamp-2 truncate">{product.name}</h5>
                 </a>
                 <hr className="border-gray-200 my-auto" />
 

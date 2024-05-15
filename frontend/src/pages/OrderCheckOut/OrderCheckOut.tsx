@@ -7,6 +7,8 @@ import { getProfileFromLS } from "../../ultis/auth"
 import { ProductToBuy } from "../../types/product.type"
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import path from "../../ultis/path";
 
 type BuyProductType = ProductToBuy
 
@@ -146,11 +148,11 @@ export default function OrderCheckOut(props: any) {
                                     <div className="ml-2 text-2xl text-orange">{totalPrice} VND</div>
                                 </div>
                             </div>
-                            <Button onClick = {handlePlaceOrder}className="ml-4 flex h-10 w-40 items-center justify-center bg-red-500 text-sm uppercase text-white hover:bg-red-600">mua hàng</Button>
+                            <Link to={path.order_success} onClick = {handlePlaceOrder} className="ml-4 flex h-10 w-40 items-center justify-center bg-red-500 text-sm uppercase text-white hover:bg-red-600">mua hàng</Link>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     )
-}
+} 

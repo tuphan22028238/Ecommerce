@@ -12,8 +12,12 @@ import { AppContext } from "./context/app.context"
 import path from "./ultis/path"
 import Cart from "./pages/Cart/Cart"
 import PossesProductList from "./pages/PossesProductList"
+import ViewOrderDetails from "./pages/PossesProductList/ViewOrderDetails"
+import ConfirmOrder from "./pages/PossesProductList/ConfirmOrder"
 import OrderCheckOut from "./pages/OrderCheckOut"
 import ViewOrder from "./pages/PossesProductList/ViewOrder/ViewOrder"
+import OrderSucess from "./pages/OrderSucess/OrderSucess"
+import UserOrder from "./pages/userOrder/UserOrder"
 function ProtectedRoute() {
   const {isAuthenticated} = useContext(AppContext)
   return isAuthenticated ? <Outlet/> : <Navigate to='/login' />
@@ -122,6 +126,38 @@ export default function useRouteElements() {
           <ViewOrder/>
         </MainLayout>
       )
+    },
+    {
+      path: path.seller.view_order_detail,
+      element: (
+        <MainLayout>
+          <ViewOrderDetails/>
+        </MainLayout>
+      )
+    },
+    {
+      path: path.seller.confirm_order,
+      element: (
+        <MainLayout>
+          <ConfirmOrder/>
+        </MainLayout>
+      )
+    },
+    {
+      path: path.order_success,
+      element: (
+        <MainLayout>
+          <OrderSucess/>
+        </MainLayout>
+      )
+    },
+    {
+      path: path.user_order,
+      element:(  
+      <MainLayout>
+        <UserOrder/>
+      </MainLayout>
+       )
     }
 
   ])
