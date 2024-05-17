@@ -200,6 +200,36 @@ class SellerController {
     }
   }
 
+  // Cancel order
+  async cancelOrder(req, res, next) {
+    try {
+      const orderDetailId = req.params.id;
+
+      const order = await OrderDetail.findOne({ where: { id: orderDetailId } });
+
+      if (order) {
+        // Update order status to cancelled
+        order.status = 2;
+        await order.save();
+
+        // Get order items
+        const orderItems = await Product.findOne({ where: { id : order.productId } });
+
+        // Update product quantities
+        orderItems.unitInStock += order.quantity;
+        orderItems.quantitySold -= order.quantity;
+        await orderItems.save();
+
+        res.send("Order cancelled successfully");
+      } else {
+        res.status(404).send("Order not found");
+      }
+    } catch (error) {
+      console.error("Error cancelling order:", error.message);
+      res.status(400).send("Error cancelling order");
+    }
+  }
+
   //View specific OrderDetail
   async viewSpecificOrderDetail(req, res, next) {
     try { 

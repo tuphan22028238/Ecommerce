@@ -137,6 +137,7 @@ return (
                   <div className="col-span-2">
                     <button 
                       className="bg-orange-500 border-4 text-black border-red-500 rounded-sm"
+                      disabled = {ProductWantToBuy.productIds.length === 0}
                       onClick={handleSubmit}
                       >Mua hàng
                     </button>

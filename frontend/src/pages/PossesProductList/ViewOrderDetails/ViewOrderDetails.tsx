@@ -53,7 +53,7 @@ export default function ViewOrderDetails() {
             </div>
           {orderDetailQuery.data?.data?.map((detail : any,index : any)  => (
             <div className="w-auto max-w-[523px]">
-            <Link to = {`/seller/confirmOrder/${detail.orderDetail.id}/${productId}`} key={index}>
+            <Link to = {detail.orderDetail.status === 0 ? `/seller/confirmOrder/${detail.orderDetail.id}/${productId}` : '#'} key={index}>
               <div className="grid grid-cols-12 text-center rounded-sm border border-gray bg-white py-5 px-4 text-sm text-gray-500">
                 <div className="col-span-2">
                   <div className="flex">
@@ -72,7 +72,7 @@ export default function ViewOrderDetails() {
                   <div className="grid text-center grid-cols-5">
                   <div className="col-span-2">{detail.buyer.email}</div>
                   <div className="col-span-2">{detail.orderDetail.quantity}</div>
-                  <div className="col-span-1" style={{ color: detail.orderDetail.status === 0 ? "red" : "lightgreen" }}  >{detail.orderDetail.status == 0 ? "Pending": "Confirm"}</div>
+                  <div className="col-span-1" style={{ color: detail.orderDetail.status === 1 ? "lightgreen" : "red"}}  >{detail.orderDetail.status == 0 ? "Pending": (detail.orderDetail.status == 1 ? "Confirm" : "Cancel")}</div>
                   </div>
                 </div>
               </div>

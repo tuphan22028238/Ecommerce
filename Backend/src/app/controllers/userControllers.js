@@ -20,14 +20,16 @@ class UserController {
   // Update profile
   async updateProfile(req, res, next) {
     try {
-      const { name, email, phone, address } = req.body;
+      const { username, name, email, phone, address, dob } = req.body;
       const user = await User.findOne({ where: { id: req.params.id } });
 
       if (user) {
+        user.username = username;
         user.name = name;
         user.email = email;
         user.phone = phone;
         user.address = address;
+        user.dob = dob;
         await user.save();
         res.send("Profile updated successfully");
       } else {
@@ -362,9 +364,9 @@ class UserController {
   // Cancel order
   async cancelOrder(req, res, next) {
     try {
-      const orderId = req.params.id;
+      const orderDetailId = req.params.id;
 
-      const order = await Order.findOne({ where: { id: orderId } });
+      const order = await OrderDetail.findOne({ where: { id: orderDetailId } });
 
       if (order) {
         // Update order status to cancelled
@@ -372,17 +374,12 @@ class UserController {
         await order.save();
 
         // Get order items
-        const orderItems = await Order.findAll({ where: { orderId: orderId } });
+        const orderItems = await Product.findOne({ where: { id : order.productId } });
 
         // Update product quantities
-        for (const item of orderItems) {
-          const product = await Product.findOne({ where: { id: item.productId } });
-          if (product) {
-            product.unitInStock += item.quantity;
-            product.sold -= item.quantity;
-            await product.save();
-          }
-        }
+        orderItems.unitInStock += order.quantity;
+        orderItems.quantitySold -= order.quantity;
+        await orderItems.save();
 
         res.send("Order cancelled successfully");
       } else {
@@ -406,19 +403,21 @@ class UserController {
     }
   }
   // View order status
-  async viewOrderStatus(req, res, next) {
+  async viewOrder(req, res, next) {
     try {
-      const orderId = req.params.id;
-      const userId = req.params.userId;
+      const userId = req.params.id;
+      const allOrder = []
 
-      const orderDetails = await OrderDetail.findAll({ where: { orderId: orderId, userId: userId } });
-
-      if (!orderDetails) {
-        res.status(404).send("Order not found or you do not have permission to view this order");
-        return;
+      const orders = await Order.findAll({ where: { userId } });
+      for (const order of orders) {
+        const orderDetails = await OrderDetail.findAll({ where: { orderId: order.id } });
+        for (const orderDetail of orderDetails) {
+          const product = await Product.findOne({ where: { id: orderDetail.productId } });
+          allOrder.push({order, orderDetail, product});
+        }
       }
 
-      res.send(orderDetails);
+      res.send(allOrder);
     } catch (errors) {
       console.error("Error viewing order status:", errors.message);
       res.status(400).send("Error viewing order status");

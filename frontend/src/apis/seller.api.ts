@@ -16,4 +16,6 @@ export const getDetailOrder = (id : number) => http.get(`/seller/orderDetail/${i
 
 export const confirmOrder = (params: any) => http.put(`/seller/confirmOrder/${params.orderDetailId}/${params.productId}`)
 
+export const cancelOrder = (id: number) => http.put(`/seller/cancelOrder/${id}`)
+
 export const getSpecificOrderDetail = (id : number) => http.get(`/seller/viewSpecificOrderDetail/${id}`)
