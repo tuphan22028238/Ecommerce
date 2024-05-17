@@ -26,7 +26,7 @@ class ServerController {
         where: {
           ...category ? {typeId: category} : {},
           name: {
-            [Op.like]: `%${req.query.search || ''}%`
+            [Op.like]: `%${req.query.name || ''}%`
           }
         },
         offset: offset,
