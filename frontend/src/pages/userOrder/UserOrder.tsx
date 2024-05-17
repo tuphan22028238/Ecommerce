@@ -48,7 +48,11 @@ return (
         <div className="col-span-1 text-center">{order.orderDetail.quantity}</div>
         <div className="col-span-2 text-center">{order.orderDetail.status == 1 ? "Confirm" : (order.orderDetail.status == 0 ? "Pending" : "Cancel")}</div>
         <div className="col-span-1 text-center">
-          <button onClick={() => handleCancel(order.orderDetail.id)} className="bg-orange-500 text-black px-2 py-1 rounded hover:bg-orange-300">Huỷ</button>
+          <button 
+            onClick={() => handleCancel(order.orderDetail.id)} 
+            className="bg-orange-500 text-black px-2 py-1 rounded hover:bg-orange-300"
+            disabled={order.orderDetail.status == 2}
+          >Huỷ</button>
         </div>
     </div>
     ))}

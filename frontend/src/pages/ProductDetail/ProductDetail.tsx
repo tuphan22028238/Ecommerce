@@ -48,7 +48,13 @@ export default function ProductDetail() {
     addToCartMutation.mutate(formState)
   }
   const handleChange = (name: keyof FormStateType) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormState((prev) => ({...prev, [name]: Number(e.target.value)}))
+    let value = Number(e.target.value)
+    if (name === 'quantity') {
+      if (product !== undefined && value > product?.unitInStock) {
+        value = product?.unitInStock
+      }
+    }
+    setFormState((prev) => ({...prev, [name]: value}))
   }
 
   // const currentImages = useMemo(
@@ -169,7 +175,7 @@ export default function ProductDetail() {
                     </svg>
                   </button>
                   <InputNumber
-                    value={formState.quantity}
+                    value={formState.quantity > product.unitInStock ? product.unitInStock : formState.quantity}
                     className=''
                     onChange={handleChange('quantity')}
                     classNameError='hidden'

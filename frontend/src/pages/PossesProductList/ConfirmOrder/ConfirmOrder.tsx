@@ -61,8 +61,6 @@ export default function ConfirmOrder() {
         </button>
         <button onClick={()=> handleCancel(confirmOrderQuery.data?.data.orderDetail.id)} className='ml-3 border-2 bg-red-400 rounded px-2 py-2'>Cancel</button>
       </div>
-     
-      
     </div>
   );
 }
