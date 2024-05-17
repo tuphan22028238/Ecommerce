@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';	
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { confirmOrder, getSpecificOrderDetail } from '../../../apis/seller.api';
+import { confirmOrder, getSpecificOrderDetail, cancelOrder } from '../../../apis/seller.api';
 
 
 export default function ConfirmOrder() {
@@ -19,9 +19,20 @@ export default function ConfirmOrder() {
     },
   });
 
+  const cancelOrderMutation = useMutation({
+    mutationFn: (id: number) => cancelOrder(id),
+    onSuccess: () => {
+      confirmOrderQuery.refetch();
+    },
+  });
+
   const handleConfirm = () => { 
     confirmOrderMutation.mutate({ orderDetailId, productId });
     navigate('/seller/orderDetail/' + productId);
+  }
+
+  const handleCancel = (id: number) => {
+    cancelOrderMutation.mutate(id);
   }
 
   return (
@@ -48,7 +59,7 @@ export default function ConfirmOrder() {
       <div className="flex justify-end px-5 py-6"> 
         <button onClick={()=> handleConfirm()} className='border-2 bg-green-400 rounded px-2 py-2'>Confirm now
         </button>
-        <button onClick={()=> handleConfirm()} className='ml-3 border-2 bg-red-400 rounded px-2 py-2'>Cancel</button>
+        <button onClick={()=> handleCancel(confirmOrderQuery.data?.data.orderDetail.id)} className='ml-3 border-2 bg-red-400 rounded px-2 py-2'>Cancel</button>
       </div>
      
       

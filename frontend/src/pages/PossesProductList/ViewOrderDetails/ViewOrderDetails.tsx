@@ -72,7 +72,7 @@ export default function ViewOrderDetails() {
                   <div className="grid text-center grid-cols-5">
                   <div className="col-span-2">{detail.buyer.email}</div>
                   <div className="col-span-2">{detail.orderDetail.quantity}</div>
-                  <div className="col-span-1" style={{ color: detail.orderDetail.status === 0 ? "red" : "lightgreen" }}  >{detail.orderDetail.status == 0 ? "Pending": "Confirm"}</div>
+                  <div className="col-span-1" style={{ color: detail.orderDetail.status === 1 ? "lightgreen" : "red"}}  >{detail.orderDetail.status == 0 ? "Pending": (detail.orderDetail.status == 1 ? "Confirm" : "Cancel")}</div>
                   </div>
                 </div>
               </div>
