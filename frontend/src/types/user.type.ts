@@ -11,3 +11,12 @@ export interface User {
   updateAt: string
   __v : number
 }
+
+export interface UserInformation {
+  username: string
+  name: string
+  email: string
+  phone: string
+  address: string
+  dob: string
+}
