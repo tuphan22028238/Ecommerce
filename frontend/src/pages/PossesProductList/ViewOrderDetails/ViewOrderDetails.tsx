@@ -14,6 +14,9 @@ export default function ViewOrderDetails() {
     queryKey: ['orderDetail', productId],
     queryFn: () => getDetailOrder(Number(productId)),
   }) 
+
+  console.log(orderDetailQuery.data?.data);
+  
   
   useEffect(() => {
     orderDetailQuery.refetch()
@@ -59,14 +62,14 @@ export default function ViewOrderDetails() {
                   <div className="flex">
                     <div className="flex-grow">
                       <div className="flex">
-                        <img src="https://api-ecom.duthanhduoc.com/images/bbea6d3e-e5b1-494f-ab16-02eece816d50.jpg" alt="" className="h-20 w-20"/>
+                        <img  alt="" src = {detail.product.imageProduct.split(', ')[0]} className="h-20 w-20"/>
                         {/* <div className="items-center justify-center">{detail.buyer.id}</div> */}
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="col-span-4">
-                  Tên sản phẩm
+                  {detail.product.name}
                 </div>
                 <div className="col-span-6">
                   <div className="grid text-center grid-cols-5">
