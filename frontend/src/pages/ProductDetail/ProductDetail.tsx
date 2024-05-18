@@ -90,6 +90,7 @@ export default function ProductDetail() {
     addToCartMutation.mutate(formState)
     setTimeout(() => setProcessBuy(true), 200)
   }
+  {console.log(product?.quantityPerUnit)}
 
   if (!product) return <div>Loading...</div>
   return (
@@ -206,9 +207,11 @@ export default function ProductDetail() {
                 </div>
               </div>
               <div className='mt-8 flex items-center'>
-                <Link to='' 
+                <button 
                   className='flex h-12 items-center justify-center rounded-sm border-2 border-blue-600 bg-blue-300 px-5 capitalize text-black shadow-sm hover:bg-blue-100'
                   onClick={addToCart}
+                  disabled= {product.unitInStock < 0}
+                 
                 >
                   <svg
                     enableBackground='new 0 0 15 15'
@@ -234,11 +237,13 @@ export default function ProductDetail() {
                     </g>
                   </svg>
                   Thêm vào giỏ hàng
-                </Link>
+                </button>
 
-                <Link to = '' onClick = {() => handleBuyNow(product.id)} className='ml-16 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-blue-700 capitalize text-white shadow-sm outline-none hover:bg-blue-700/80'>
+                <button onClick = {() => handleBuyNow(product.id)} className='ml-16 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-blue-700 capitalize text-white shadow-sm outline-none hover:bg-blue-700/80'
+                disabled= {product.unitInStock < 0}
+                >
                   Mua ngay
-                </Link>
+                </button>
               </div>
             </div>
           </div>

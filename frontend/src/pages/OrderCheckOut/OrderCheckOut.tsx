@@ -57,7 +57,7 @@ export default function OrderCheckOut(props: any) {
     const handleSelectPaymentMode = (mode: number) => {
         setBuyProduct((prev) => ({...prev, paymentMode: mode}))
     }
-
+    
     return(
         <div className='bg-neutral-100 py-16'>
             <div className="container">
@@ -139,6 +139,9 @@ export default function OrderCheckOut(props: any) {
                                 </div>
                             </div>
                         </div>
+                        {BuyProduct.paymentMode === 1 && <div className="flex items-center justify-center bg-white"> 
+                              <img src="/payment.jpg" alt="pay" className="w-80 h-84"/>
+                        </div>}
                     </div>
                 </div>
                 <div className="sticky bottom-0 z-0 flex items-center rounded-sm justify-end bg-white p-5 border border-gray-100 shadow">

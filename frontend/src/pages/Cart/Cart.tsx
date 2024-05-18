@@ -68,7 +68,7 @@ return (
           <div className="grid grid-cols-12 rounded-sm bg-white py-5 px-9 text-sm capitalize text-gray-500 shadow">
             <div className="col-span-6">
               <div className="flex items-center">
-                <div className="flex flex-shrink-0 items-center justify-center pr-3">
+                <div className="flex flex-shrink-0 items-center justify-center pr-3 items-center">
                   {/* <input type="checkbox" className="h-5 w-5 accent-orange-500" /> */}
                 </div>
                 <div className="flex-grow text-black">Sản phẩm</div>
@@ -87,7 +87,7 @@ return (
             {cartItems?.data?.data.map((item: any) => (<div className="grid grid-cols-12 text-center rounded-sm border border-gray bg-white py-5 px-4 text-sm text-gray-500">
               <div className="col-span-6">
                 <div className="flex">
-                  <div className="flex flex-shrink-0 items-center justify-center pr-3">
+                  <div className="flex flex-shrink-0 items-center justify-center items-center pr-3">
                     <input type="checkbox" className="h-5 w-5 accent-orange-500" 
                     checked = {ProductWantToBuy.productIds.includes(item.product.id)}
                     onChange={() => handleCheckboxChange(item.product.id)}
@@ -95,9 +95,9 @@ return (
                   </div>
                   <Link to = {`${path.home}show/${item.product.id}`}>
                   <div className="flex-grow">
-                    <div className="flex">
+                    <div className="flex items-center justify-center">
                       <img src={item.product.imageProduct.split(', ')[0]} alt="" className="h-20 w-20"/>
-                      <div className="">{item.product.name}</div>
+                      <div className="pl-5">{item.product.name}</div>
                     </div>
                   </div>
                   </Link>
@@ -105,11 +105,11 @@ return (
                 
               </div>
               <div className="col-span-6">
-                <div className="grid text-center grid-cols-5">
-                <div className="col-span-2">{item.product.price}</div>
-                <div className="col-span-1">{item.cartDetails.quantity}</div>
-                <div className="col-span-1">{item.product.price * item.cartDetails.quantity}</div>
-                <div className="col-span-1">
+                <div className="grid text-center grid-cols-5 flex items-center justify-center">
+                <div className="col-span-2 mt-6">{item.product.price}</div>
+                <div className="col-span-1 mt-6">{item.cartDetails.quantity}</div>
+                <div className="col-span-1 mt-6">{item.product.price * item.cartDetails.quantity}</div>
+                <div className="col-span-1 mt-6">
                   <button 
                     className="bg-orange-500 rounded border-2 border-red-100 text-black hover:bg-orange-300 px-2 py-1"
                     onClick={() =>handleDelete(item.product.id)}
@@ -125,8 +125,8 @@ return (
             <div className="grid grid-cols-12 text-center rounded-sm border border-gray bg-white py-5 px-4 text-sm text-gray-500">
               <div className="col-span-6">
                 <div className="flex flex-shrink-0 items-center pr-3">
-                    <input type="checkbox" className="h-5 w-5 accent-orange-500"/>
-                    <div className="ml-3">Chọn tất cả</div>
+                    {/* <input type="checkbox" className="h-5 w-5 accent-orange-500"/> */}
+                    <div className="ml-3 text-center mt-3 text-base">Chọn các sản phẩm cần thanh toán</div>
                 </div>
               </div>
               <div className="col-span-6">
@@ -136,7 +136,7 @@ return (
                   </div>
                   <div className="col-span-2">
                     <button 
-                      className="bg-orange-500 border-4 text-black border-red-500 rounded-sm"
+                      className="bg-orange-500  text-black  rounded-sm px-4 py-3 shadow-sm hover:bg-orange-300 hover:cursor-pointer"
                       disabled = {ProductWantToBuy.productIds.length === 0}
                       onClick={handleSubmit}
                       >Mua hàng
