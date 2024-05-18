@@ -43,7 +43,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
       <div className='flex flex-wrap items-center justify-between gap-2'>
         <div className='flex flex-wrap items-center gap-2'>
           <div>Sắp xếp theo</div>
-          <button
+          {/* <button
             className={classNames('h-8  px-4 text-center text-sm capitalize', {
               'bg-blue-500 text-white hover:bg-blue-400': isActiveSortBy(sortBy.view),
               'bg-white text-black hover:bg-slate-100': !isActiveSortBy(sortBy.view)
@@ -51,7 +51,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
             onClick={() => handleSort(sortBy.view)}
           >
             Phổ biến
-          </button>
+          </button> */}
           <button
             className={classNames('h-8  px-4 text-center text-sm capitalize', {
               'bg-blue-500 text-white hover:bg-blue-400': isActiveSortBy(sortBy.createdAt),

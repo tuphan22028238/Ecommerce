@@ -13,8 +13,8 @@ export default function Footer() {
         <div className="text-center text-sm mt-10">
             <div>Công ty TNHH Market Swift</div>
             <div className="mt-2">Địa chỉ: 144 Xuân Thuỷ, Phường Dịch Vọng Hậu, Quận Cầu Giấy, Thành phố Hà Nội, Việt Nam. Tổng đài hỗ trợ: 19001234 - Email: cskh@hotro.marketswift.vn</div>
-            <div className="mt-2">Chịu Trách Nhiệm Quản Lý Nội Dung: Nguyễn Đức Trí - Điện thoại liên hệ: 024 73081221 (ext 4678)</div>
-            <div className="mt-2">Mã số doanh nghiệp: 1234567890 do Sở Kế hoạch & Đầu tư TP Hà Nội cấp lần đầu ngày 01/01/2024</div>
+            <div className="mt-2">Nhóm 10 Lớp INT2208E_23 K67_CA_CLC2 UET</div>
+            <div className="mt-2">Thành Viên: Phan Anh Tú - Nguyễn Ngọc Hưng - Nguyễn Đức Phát - Nguyễn Nhật Phong</div>
         </div>
       </div>
 
