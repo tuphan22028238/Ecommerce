@@ -164,11 +164,13 @@ class SellerController {
       const detailedOrderDetails = await Promise.all(orderDetails.map(async detail => {
         const order = await Order.findOne({ where: { id: detail.orderId } });
         const buyer = await User.findByPk(order.userId);
+        const product = await Product.findByPk(detail.productId);
 
         return {
           orderDetail: detail,
           order: order,
-          buyer: buyer
+          buyer: buyer,
+          product: product
         };
       }));
 

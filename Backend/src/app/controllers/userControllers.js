@@ -213,6 +213,8 @@ class UserController {
           });
           orderSummary.totalItems += item.quantity;
           orderSummary.totalPrice += totalCostForItems;
+
+          await item.destroy();
         };
 
         // Collect payment info
@@ -283,6 +285,7 @@ class UserController {
 
         productToBuy.productId = product.id;
         productToBuy.name = product.name;
+        productToBuy.image = product.imageProduct;
         productToBuy.quantity = productInCart.quantity;
         productToBuy.price = product.price;
         productToBuy.color = productInCart.color;

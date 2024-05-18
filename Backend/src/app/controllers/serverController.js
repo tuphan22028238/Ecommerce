@@ -34,7 +34,14 @@ class ServerController {
         order: [[sortBy, order]]
       });   
 
-      const totalProducts = await Product.count()
+      const totalProducts = await Product.count({
+        where: {
+          ...category ? {typeId: category} : {},
+          name: {
+            [Op.like]: `%${req.query.name || ''}%`
+          }
+        }
+      })
       const total_pages = Math.ceil(totalProducts / limit)
       const pagination = {
         page,
