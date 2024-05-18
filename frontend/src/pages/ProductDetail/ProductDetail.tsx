@@ -1,13 +1,14 @@
 import {useQuery,useMutation } from "@tanstack/react-query"
 import { Link, useParams } from "react-router-dom"
 import { getProduct } from "../../apis/products.api"
-import { addProductToCart } from "../../apis/user.api"
+import { addProductToCart, prepareOrderFromCart } from "../../apis/user.api"
 import { getProfileFromLS } from "../../ultis/auth"
 import { formatCurrency, formatNumberToSocialStyle, rateSale } from '../../ultis/utils'
 import InputNumber from '../../components/InputNumber'
 import { useEffect, useMemo, useState } from 'react'
 import { Product, ProductTocart } from 'types/product.type'
 import { toast } from 'react-toastify'
+import OrderCheckOut from "../OrderCheckOut/OrderCheckOut"
 
 type FormStateType = ProductTocart
 
@@ -22,6 +23,8 @@ const intialFormState : FormStateType = {
 export default function ProductDetail() {
   const { id } = useParams()
   const [formState, setFormState] = useState<FormStateType>(intialFormState)
+  const [ProcessBuy, setProcessBuy] = useState(false)
+  const [ProductWantToBuy, setProductWantToBuy] = useState({productIds: [Number(id)]} as any)
   const { data: ProductDetailData } = useQuery({
     queryKey: ['product', id],
     queryFn: () => {
@@ -31,7 +34,7 @@ export default function ProductDetail() {
   })
   const product = ProductDetailData?.data
 
-  const [currentIndexImages, setCurrentIndexImages] = useState([0, 5])
+  const [currentIndexImages, setCurrentIndexImages] = useState([0, 3])
   const [activeImage, setActiveImage] = useState('')
   
   const addToCartMutation = useMutation({
@@ -56,37 +59,43 @@ export default function ProductDetail() {
     }
     setFormState((prev) => ({...prev, [name]: value}))
   }
+  const images = product?.imageProduct?.split(', ')
+  
+  const currentImages = useMemo(
+    () => (product ? images : []),
+    [product, currentIndexImages]
+  )
 
-  // const currentImages = useMemo(
-  //   () => (product ? product.images.slice(...currentIndexImages) : []),
-  //   [product, currentIndexImages]
-  // )
+  useEffect(() => {
+    if (images && images?.length > 0) setActiveImage(images[0])
+  }, [product])
 
-  // useEffect(() => {
-  //   if (product && product.images.length > 0) setActiveImage(product.images[0])
-  // }, [product])
+  const next = () => {
+    if (images && currentIndexImages[1] < images.length) {
+      setCurrentIndexImages((prev) => [prev[0] + 1, prev[1] + 1])
+    }
+  }
 
-  // const next = () => {
-  //   if (currentIndexImages[1] < (product as Product).images.length) {
-  //     setCurrentIndexImages((prev) => [prev[0] + 1, prev[1] + 1])
-  //   }
-  // }
+  const prev = () => {
+    if (currentIndexImages[0] > 0) {
+      setCurrentIndexImages((prev) => [prev[0] - 1, prev[1] - 1])
+    }
+  }
 
-  // const prev = () => {
-  //   if (currentIndexImages[0] > 0) {
-  //     setCurrentIndexImages((prev) => [prev[0] - 1, prev[1] - 1])
-  //   }
-  // }
+  const chooseActive = (img: string) => {
+    setActiveImage(img)
+  }
 
-  // const chooseActive = (img: string) => {
-  //   setActiveImage(img)
-  // }
-  // console.log(currentIndexImages[1])
-  // console.log(product?.images.length)
+  const handleBuyNow = (id: any) => {
+    addToCartMutation.mutate(formState)
+    setTimeout(() => setProcessBuy(true), 200)
+  }
+
   if (!product) return <div>Loading...</div>
   return (
     <div className='bg-gray-300 py-6'>
-      <div className='container'>
+      {!ProcessBuy ? (
+      <div><div className='container'>
         <div className='bg-white p-4 shadow'>
           <div className='grid grid-cols-12 gap-9'>
             <div className='col-span-5'>
@@ -97,10 +106,10 @@ export default function ProductDetail() {
                   className='absolute left-0 top-0 h-full w-full bg-white object-cover'
                 />
               </div>
-              <div className='relative mt-4 grid grid-cols-5 gap-1'>
-                p<button
+              <div className='relative mt-4 grid grid-cols-3 gap-1'>
+                <button
                   className='absolute left-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/20 text-white'
-                  // onClick={rev}
+                  onClick={prev}
                 >
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -113,7 +122,7 @@ export default function ProductDetail() {
                     <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5 8.25 12l7.5-7.5' />
                   </svg>
                 </button>
-                {/* {currentImages.map((image, index) => {
+                {currentImages?.map((image, index) => {
                   const isActive = image === activeImage
                   return (
                     <div className='relative w-full pt-[100%]' key={index} onMouseEnter={() => chooseActive(image)}>
@@ -125,10 +134,10 @@ export default function ProductDetail() {
                       {isActive && <div className='absolute inset-0 border-2 border-orange-500'></div>}
                     </div>
                   )
-                })} */}
+                })}
                 <button
                   className='absolute right-0 top-1/2 z-10 h-9 w-5 -translate-y-1/2 bg-black/20 text-white'
-                  // onClick={next}
+                  onClick={next}
                 >
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -227,9 +236,9 @@ export default function ProductDetail() {
                   Thêm vào giỏ hàng
                 </Link>
 
-                <button className='ml-16 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-blue-700 capitalize text-white shadow-sm outline-none hover:bg-blue-700/80'>
+                <Link to = '' onClick = {() => handleBuyNow(product.id)} className='ml-16 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-blue-700 capitalize text-white shadow-sm outline-none hover:bg-blue-700/80'>
                   Mua ngay
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -242,7 +251,7 @@ export default function ProductDetail() {
             <div dangerouslySetInnerHTML={{ __html: product.description }}>{}</div>
           </div>
         </div>
-      </div>
+      </div></div>) : (<OrderCheckOut data = {ProductWantToBuy}/>)}
     </div>
   )
 }

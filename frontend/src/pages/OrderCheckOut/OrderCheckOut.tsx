@@ -24,6 +24,8 @@ export default function OrderCheckOut(props: any) {
 
     productToBuy.productIds = props.data.productIds
 
+    console.log(props.data);
+
     const [BuyProduct, setBuyProduct] = useState<BuyProductType>(productToBuy)
     
     const listBuyProduct = useQuery({
@@ -85,7 +87,7 @@ export default function OrderCheckOut(props: any) {
                                         <div className="flex">
                                             <div className="flex-grow">
                                                 <div className="flex">
-                                                    <img src="https://api-ecom.duthanhduoc.com/images/bbea6d3e-e5b1-494f-ab16-02eece816d50.jpg" alt="" className="h-20 w-20"/>
+                                                    <img src={item.image.split(', ')[0]} alt="" className="h-20 w-20"/>
                                                     <div className="">{item.name}</div>
                                                 </div>
                                             </div>

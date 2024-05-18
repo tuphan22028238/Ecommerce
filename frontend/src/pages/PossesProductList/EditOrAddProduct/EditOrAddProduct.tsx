@@ -1,4 +1,5 @@
 import { getEditProduct, postEditProduct, addProduct } from "../../../apis/seller.api"
+import { getCategory } from "../../../apis/products.api"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { Product } from "../../../types/product.type"
 import { useParams, useMatch, useNavigate } from "react-router-dom"
@@ -12,6 +13,7 @@ const intialFormState: FormStateType = {
   id: 0,
   name: '',
   price: 0,
+  imageProduct: '',
   quantityPerUnit: 0,
   description: '',
   unitInStock: 0,
@@ -21,7 +23,7 @@ const intialFormState: FormStateType = {
   createdAt: '',
   updatedAt: '',
   sellerId: 0,
-  typeId: 0
+  typeId: 1
 }
 
 export default function EditOrAddProduct() {
@@ -38,6 +40,11 @@ export default function EditOrAddProduct() {
     enabled: !isAddMode,
   })
 
+  const categoryQuery = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => getCategory()
+  })
+  
   const editProductMutation = useMutation({
     mutationFn: (data: FormStateType) => postEditProduct(Number(params.id), data),
     onSuccess: (data) => {  
@@ -74,7 +81,7 @@ export default function EditOrAddProduct() {
           navigate(`/seller/listProduct/${getProfileFromLS()}`)
         }
       })
-    }
+    } 
   }
 
   useEffect(() => {
@@ -88,16 +95,7 @@ export default function EditOrAddProduct() {
 <div className="bg-gray-200 items-center justify-center ">
 <div className="container rounded py-3 bg-white max-w-[600px]">
 <form className="max-w-sm mx-auto" onSubmit={handleSubmnit}>
-  
-  <div className="mb-5">
-    <label htmlFor="id" className="block mb-2 text-sm font-medium text-black">ID Product</label>
-    <input id="id" 
-    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lgblock w-full p-2.5" 
-    placeholder="name@flowbite.com" 
-    value= { formState.id }
-    onChange={handleChange('id')}
-    required />
-  </div>
+
   <div className="mb-5">
     <label htmlFor="name" className="block mb-2 text-sm font-medium text-black">Name</label>
     <input id="name" 
@@ -114,24 +112,33 @@ export default function EditOrAddProduct() {
     onChange={handleChange('price')}
     required />
   </div>
-  {isAddMode && <div className="mb-5">
+  <div className="mb-5">
     <label htmlFor="unitInStock" className="block mb-2 text-sm font-medium text-black">Unit</label>
     <input id="unitInStock" 
     className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded w-full p-2.5"
     value={ formState.unitInStock }
     onChange={handleChange('unitInStock')}
     required />
-  </div>}
-  {isAddMode && 
+  </div>
   <div className="mb-5">
   <label htmlFor="Type" className="block mb-2 text-sm font-medium text-black">Type</label>
-  <input id="Type" 
-  className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded w-full p-2.5"
-  value={ formState.typeId }
-  onChange={handleChange('typeId')}
-  required />
-</div>
-  }
+  <select id="Type" 
+  className="mb-1 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded w-full p-2.5"
+  onChange={(event)=> {setFormState((prev) => ({...prev, typeId : Number(event.target.value)}))}}>
+    {categoryQuery.data?.data.map((category: any) => (
+      <option key={category.id} value={category.id}>{category.name} </option>
+    ))}
+  </select>
+  </div>
+  <div className="mb-5">
+    <label htmlFor="imageProduct" className="block mb-2 text-sm font-medium text-black">Image For Product (Link)</label>
+    <input id="imageProduct" 
+    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded w-full p-2.5"
+    value={ formState.imageProduct }
+    onChange={handleChange('imageProduct')}
+    required />
+  </div>
+
   <div className="mb-5">
     <label htmlFor="des" className="block mb-2 text-sm font-medium text-black">Description</label>
     <input id="des" 

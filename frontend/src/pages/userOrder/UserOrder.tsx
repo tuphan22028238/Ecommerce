@@ -32,7 +32,7 @@ return (
         Hình ảnh
       </div>
         <div className="col-span-2 text-center">Tên</div>
-        <div className="col-span-2 text-center">Giá (1 * số lượng)</div>
+        <div className="col-span-2 text-center">Giá</div>
         <div className="col-span-1 text-center">Số lượng</div>
         <div className="col-span-2 text-center">Status</div>
         <div className="col-span-1 text-center">Huỷ</div>
@@ -41,13 +41,13 @@ return (
     {orderQuery?.data?.data.map((order: any) => (
       <div className="grid grid-cols-10 rounded-sm bg-white py-5 px-9 text-sm capitalize text-black shadow">
       <div className="col-span-2">
-        <img src="" alt="anh san pham" />
+        <img src={order.product.imageProduct.split(', ')[0]} alt="anh san pham"  className="w-20 h-20"/>
       </div>
-        <div className="col-span-2 text-center">{order.product.name}</div>
-        <div className="col-span-2 text-center">{order.product.price}</div>
-        <div className="col-span-1 text-center">{order.orderDetail.quantity}</div>
-        <div className="col-span-2 text-center">{order.orderDetail.status == 1 ? "Confirm" : (order.orderDetail.status == 0 ? "Pending" : "Cancel")}</div>
-        <div className="col-span-1 text-center">
+        <div className="col-span-2 text-center flex justify-center items-center">{order.product.name}</div>
+        <div className="col-span-2 text-center flex justify-center items-center">{order.product.price}</div>
+        <div className="col-span-1 text-center flex justify-center items-center">{order.orderDetail.quantity}</div>
+        <div className="col-span-2 text-center flex justify-center items-center">{order.orderDetail.status == 1 ? "Confirm" : (order.orderDetail.status == 0 ? "Pending" : "Cancel")}</div>
+        <div className="col-span-1 text-center flex justify-center items-center">
           <button 
             onClick={() => handleCancel(order.orderDetail.id)} 
             className="bg-orange-500 text-black px-2 py-1 rounded hover:bg-orange-300"
