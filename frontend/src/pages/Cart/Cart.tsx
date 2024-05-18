@@ -96,7 +96,7 @@ return (
                   <Link to = {`${path.home}show/${item.product.id}`}>
                   <div className="flex-grow">
                     <div className="flex">
-                      <img src="https://api-ecom.duthanhduoc.com/images/bbea6d3e-e5b1-494f-ab16-02eece816d50.jpg" alt="" className="h-20 w-20"/>
+                      <img src={item.product.imageProduct.split(', ')[0]} alt="" className="h-20 w-20"/>
                       <div className="">{item.product.name}</div>
                     </div>
                   </div>

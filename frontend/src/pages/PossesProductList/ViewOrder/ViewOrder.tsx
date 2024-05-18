@@ -38,7 +38,7 @@ export default function ViewOrder() {
 
                 <div className="p-5">
                     <a href="#">
-                    <img className="rounded-t-lg shadow" src="https://api-ecom.duthanhduoc.com/images/bbea6d3e-e5b1-494f-ab16-02eece816d50.jpg" alt="image here" />
+                    <img className="rounded-t-lg shadow" src={product.imageProduct.split(', ')[0]} alt="image here" />
                     </a>
                     <p className="mb-3 font-normal text-gray-700 pt-3">Số lượng đơn: {product.quantitySold}</p>
                 </div>

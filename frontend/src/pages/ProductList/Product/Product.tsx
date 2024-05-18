@@ -7,12 +7,12 @@ import path from '../../../ultis/path'
 export default function Product( products : any) {
 
   const product = products.data
-  
+   
   return (
     <Link to={`${path.home}show/${product.id}`}>
       <div className='rounded-sm border-2 border-white bg-white shadow transition-transform duration-100 hover:translate-y-[-0.065rem] hover:border-red-600 hover:shadow-md'>
         <div className='relative w-full pt-[100%]'>
-          <img src="https://api-ecom.duthanhduoc.com/images/bbea6d3e-e5b1-494f-ab16-02eece816d50.jpg" alt={product.name} className='obj absolute left-0 top-0 h-full w-full bg-white' />
+          <img src={product.imageProduct.split(', ')[0]} alt={product.name} className='obj absolute left-0 top-0 h-full w-full bg-white' />
         </div>
         <div className='over-flow-hidden p-2'>
           <div className='line-clamp-2 min-h-[1.75rem] text-sm'>{product.name}</div>

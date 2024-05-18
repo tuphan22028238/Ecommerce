@@ -86,7 +86,7 @@ function Header() {
               <div className="bg-white relative shadow-md rounded-sm border border-gray-200">
                 <div className="flex flex-col py-2 px-3">
                   <Link to='/profile' className="py-2 px-3 hover:text-orange-500 mt-2 text-left">User</Link>
-                  <Link to={path.user_order} className="py-2 px-3 hover:text-orange-500 mt-2 text-left">Theo dõi đơn hàng</Link>
+                  <Link to={path.user_order} className="py-2 px-3 hover:text-orange-500 mt-2 text-left">Orders</Link>
                   <button onClick={handleLogout} className="py-2 px-3 hover:text-orange-500 mt-2 text-left">Logout</button>
                 </div>
               </div>

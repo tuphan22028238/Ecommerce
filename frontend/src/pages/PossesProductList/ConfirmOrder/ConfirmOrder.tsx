@@ -33,6 +33,7 @@ export default function ConfirmOrder() {
 
   const handleCancel = (id: number) => {
     cancelOrderMutation.mutate(id);
+    navigate('/seller/orderDetail/' + productId);
   }
 
   return (
