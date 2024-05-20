@@ -116,7 +116,7 @@ function Header() {
           </div>
           <div className="mt-4 grid grid-cols-12 gap-4">
             <Link to="/" className="col-span-2">
-            <img src="public/logo.png" alt="logo here" className="w-20 h-22"/>
+            <img src="/logo.png" alt="logo here" className="w-20 h-22"/>
             </Link>
             <form className="col-span-8 translate-y-4 pl-20 translate-x-8" onSubmit={onSubmitSearch}>
               <div className="flex bg-white rounded-sm p-1 ">

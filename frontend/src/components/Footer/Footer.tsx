@@ -14,7 +14,7 @@ export default function Footer() {
             <div>Công ty TNHH Market Swift</div>
             <div className="mt-2">Địa chỉ: 144 Xuân Thuỷ, Phường Dịch Vọng Hậu, Quận Cầu Giấy, Thành phố Hà Nội, Việt Nam. Tổng đài hỗ trợ: 19001234 - Email: cskh@hotro.marketswift.vn</div>
             <div className="mt-2">Nhóm 10 Lớp INT2208E_23 K67_CA_CLC2 UET</div>
-            <div className="mt-2">Thành Viên: Phan Anh Tú - Nguyễn Ngọc Hưng - Nguyễn Đức Phát - Nguyễn Nhật Phong</div>
+            <div className="mt-2">Thành Viên: Phan Anh Tú - Nguyễn Ngọc Hưng - Nguyễn Đức Phát - Mai Anh Tuấn - Nguyễn Nhật Phong</div>
         </div>
       </div>
 
