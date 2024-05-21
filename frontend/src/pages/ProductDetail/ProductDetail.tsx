@@ -240,7 +240,7 @@ export default function ProductDetail() {
                 </button>
 
                 <button onClick = {() => handleBuyNow(product.id)} className='ml-16 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-blue-700 capitalize text-white shadow-sm outline-none hover:bg-blue-700/80'
-                disabled= {product.unitInStock < 0}
+                disabled= {product.unitInStock < 0 || getProfileFromLS() == undefined}
                 >
                   Mua ngay
                 </button>

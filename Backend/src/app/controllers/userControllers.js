@@ -78,6 +78,8 @@ class UserController {
         },
       });
 
+      const productInStock = await Product.findOne({ where: { id: productId } });
+
       // Add the product to the cart
       if (!product) {
         await Cart.create({
@@ -90,9 +92,13 @@ class UserController {
         });
         res.send("Product added to cart");
       } else {
-        product.quantity += quantity;
-        await product.save();
-        res.status(200).send("Product quantity updated in cart");
+        if (product.quantity + quantity < productInStock.unitInStock) {
+          product.quantity += quantity;
+          await product.save();
+          res.status(200).send("Product quantity updated in cart");
+        } else {
+          res.status(400).send("Product quantity exceeds stock");
+        }   
       }
       // Update the quantity of the product in the cart
     } catch (error) {
